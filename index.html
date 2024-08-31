@@ -102,34 +102,49 @@
           </tbody></table>
           <table width="100%" align="center" border="0" cellpadding="20"><tbody>
             
-            <tr>
-              <td style="padding:20px;width:25%;vertical-align:middle"><img src="images/cvf.jpg"></td>
-              <td width="75%" valign="center">
-                <a href="https://cvpr.thecvf.com/Conferences/2024/Organizers">Area Chair, CVPR 2024</a>
-                <br>
-                <a href="https://cvpr2023.thecvf.com/Conferences/2023/Organizers">Demo Chair, CVPR 2023</a>
-                <br>
-                <a href="https://cvpr2022.thecvf.com/area-chairs">Area Chair, CVPR 2022</a>
-                <br>
-                <a href="http://cvpr2021.thecvf.com/area-chairs">Area Chair & Award Committee Member, CVPR 2021</a>
-                <br>
-                <a href="http://cvpr2019.thecvf.com/area_chairs">Area Chair, CVPR 2019</a>
-                <br>
-                <a href="http://cvpr2018.thecvf.com/organizers/area_chairs">Area Chair, CVPR 2018</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:20px;width:25%;vertical-align:middle">
-                <img src="images/cs188.jpg" alt="cs188">
-              </td>
-              <td width="75%" valign="center">
-                <a href="http://inst.eecs.berkeley.edu/~cs188/sp11/announcements.html">Graduate Student Instructor, CS188 Spring 2011</a>
-                <br>
-                <a href="http://inst.eecs.berkeley.edu/~cs188/fa10/announcements.html">Graduate Student Instructor, CS188 Fall 2010</a>
-                <br>
-                <a href="http://aima.cs.berkeley.edu/">Figures, "Artificial Intelligence: A Modern Approach", 3rd Edition</a>
-              </td>
-            </tr>
+            <tr onmouseout="bog_stop()" onmouseover="bog_start()">
+      <td style="padding:20px;width:25%;vertical-align:middle">
+        <div class="one">
+          <div class="two" id='bog_image'><video  width=100% muted autoplay loop>
+          <source src="images/Stylex.png" type="video/mp4">
+          Your browser does not support the video tag.
+          </video></div>
+          <img src='images/Stylex.png' width=100%>
+        </div>
+        <script type="text/javascript">
+          function bog_start() {
+            document.getElementById('bog_image').style.opacity = "1";
+          }
+
+          function bog_stop() {
+            document.getElementById('bog_image').style.opacity = "0";
+          }
+          bog_stop()
+        </script>
+      </td>
+      <td style="padding:20px;width:75%;vertical-align:middle">
+          <span class="papertitle">[Re] Explaining in Style: Training a GAN to explain a classifier in StyleSpace
+	</span>
+        <br>
+	Noah van der Vleuten,
+	Tadija Radusinović,
+	<strong>Rick Akkerman</strong>,
+	Meilina Reksoprodjo	
+        <br>
+        <em>Rescience C</em>, 2022
+        <br>
+        <a href="https://zenodo.org/record/6574709/files/article.pdf">Publication</a>
+        |
+        <a href="https://github.com/NoahVl/Explaining-In-Style-Reproducibility-Study">Code</a>
+	|
+	<a href="https://nips.cc/virtual/2022/poster/56097">NeurIPS Poster</a>
+        <p></p>
+        <p>
+        By incorporating a classifier into StyleGAN’s training process, StylEx develops a classifier-specific StyleSpace. Within this space we can find disentangled attributes that can be used to generate counterfactual images that flip the classifier’s decision.
+        </p>
+      </td>
+    </tr>
+</tbody></table>
 
           </tbody></table>
           <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
