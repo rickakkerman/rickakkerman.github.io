@@ -50,24 +50,22 @@
 
     <tr onmouseout="bog_stop()" onmouseover="bog_start()">
       <td style="padding:20px;width:25%;vertical-align:middle">
-        <div class="one">
-          <div class="two" id='bog_image'><video  width=100% muted autoplay loop>
-          <source src="images/Stylex.png" type="video/mp4">
-          Your browser does not support the video tag.
-          </video></div>
-          <img src='images/Stylex.png' width=100%>
-        </div>
-        <script type="text/javascript">
-          function bog_start() {
-            document.getElementById('bog_image').style.opacity = "1";
-          }
-
-          function bog_stop() {
-            document.getElementById('bog_image').style.opacity = "0";
-          }
-          bog_stop()
-        </script>
-      </td>
+	  <div class="one">
+	    <div class="two" id='bog_image'>
+	      <img src='images/Stylex.png' width=100%>
+	    </div>
+	    <script type="text/javascript">
+	      function bog_start() {
+	        document.getElementById('bog_image').style.opacity = "1";
+	      }
+	
+	      function bog_stop() {
+	        document.getElementById('bog_image').style.opacity = "0";
+	      }
+	      bog_stop()
+	    </script>
+	  </div>
+	</td>
       <td style="padding:20px;width:75%;vertical-align:middle">
           <span class="papertitle">[Re] Explaining in Style: Training a GAN to explain a classifier in StyleSpace
 	</span>
