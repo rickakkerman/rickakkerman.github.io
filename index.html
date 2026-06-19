@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rick Akkerman</title>
+<link rel="icon" href="data/AkkermanRick_Logo.ico" sizes="any">
+<link rel="shortcut icon" href="data/AkkermanRick_Logo.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<style>
+  /* XCharter (self-hosted) — used for body text. Converted from the official
+     CTAN OpenType release to woff2; files live in data/fonts/. */
+  @font-face{font-family:"XCharter";font-style:normal;font-weight:400;font-display:swap;
+    src:url("data/fonts/xcharter-regular.woff2") format("woff2")}
+  @font-face{font-family:"XCharter";font-style:italic;font-weight:400;font-display:swap;
+    src:url("data/fonts/xcharter-italic.woff2") format("woff2")}
+  @font-face{font-family:"XCharter";font-style:normal;font-weight:700;font-display:swap;
+    src:url("data/fonts/xcharter-bold.woff2") format("woff2")}
+  @font-face{font-family:"XCharter";font-style:italic;font-weight:700;font-display:swap;
+    src:url("data/fonts/xcharter-bolditalic.woff2") format("woff2")}
+
+  :root{
+    --bg:        #ffffff;
+    --surface:   #ffffff;
+    --rail:      #ffffff;
+    --ink:       #1a1714;
+    --ink-soft:  #6b655c;
+    --line:      #e7e2d8;
+    --accent:    #1565c0;       /* Material blue (matches the publication buttons) */
+    --accent-ink:#ffffff;
+    --chip:      #f0ece3;
+    --hover:     #f1ede4;
+    --rail-w:    248px;
+    --rail-w-mini: 76px;
+    --top-h:     60px;
+    --display:   "Fraunces", Georgia, "Times New Roman", serif;
+    --body:      "XCharter", Georgia, "Times New Roman", serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--body);
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;height:var(--top-h);
+    display:flex;align-items:center;gap:16px;
+    padding:0 18px;background:var(--bg);z-index:50;
+  }
+  .top-left{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+  .top-spacer{flex:1}
+  .menu-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:grid;place-items:center;transition:background .15s;
+  }
+  .menu-btn:hover{background:var(--hover)}
+  .menu-btn svg{width:22px;height:22px}
+
+  .brand{display:flex;align-items:baseline;gap:2px;user-select:none}
+  .brand .first{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
+  .brand .last{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--accent)}
+
+  /* current section label in the top bar, aligned above the page content */
+  .topbar-section{
+    position:absolute;left:var(--rail-w);top:0;height:var(--top-h);
+    display:flex;align-items:center;gap:16px;padding-left:24px;pointer-events:none;
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;
+  }
+  .topbar-section .top-back{
+    pointer-events:auto;text-decoration:none;color:var(--ink-soft);letter-spacing:.02em;
+    text-transform:none;font-size:13px;font-weight:600;transition:color .15s;
+  }
+  .topbar-section .top-back:hover{color:var(--accent)}
+  /* the label tints to the in-view company's brand colour (set in JS); fade between */
+  .topbar-section .top-label{transition:color .3s ease}
+
+
+  /* ---------- SIDEBAR ---------- */
+  .rail{
+    position:fixed;top:var(--top-h);left:0;bottom:0;width:var(--rail-w);
+    background:var(--rail);padding:12px 12px 40px;overflow-y:auto;z-index:40;
+    transition:width .2s ease;
+  }
+  .rail::-webkit-scrollbar{width:8px}
+  .rail::-webkit-scrollbar-thumb{background:#ddd6c9;border-radius:4px}
+  .rail-section{padding:8px 0;border-bottom:1px solid var(--line)}
+  .rail-section:last-child{border-bottom:none}
+
+  .nav-item{
+    display:flex;align-items:center;gap:22px;
+    padding:9px 12px;border-radius:11px;font-size:15px;font-weight:500;
+    transition:background .12s;white-space:nowrap;
+  }
+  .nav-item:hover{background:var(--hover)}
+  /* active/current page is not highlighted in the menu (by request) */
+  .nav-item svg{width:23px;height:23px;flex:0 0 23px}
+
+  .rail-head{
+    display:flex;align-items:center;gap:6px;
+    padding:8px 12px 4px;font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.01em;
+  }
+  .rail-head .chev{width:18px;height:18px;opacity:.6}
+  .rail-head--toggle{cursor:pointer;user-select:none;border-radius:11px;transition:background .12s}
+  .rail-head--toggle:hover{background:var(--hover)}
+  .rail-head--toggle .chev{transform:rotate(90deg);transition:transform .2s ease}
+  #expSection.collapsed .rail-head--toggle .chev,
+  .rail-section.collapsed .rail-head--toggle .chev{transform:rotate(0deg)}
+  .rail-section.collapsed > .company,
+  .rail-section.collapsed > .nav-item{display:none}
+
+  .company{
+    display:flex;align-items:center;gap:18px;
+    padding:8px 12px;border-radius:11px;transition:background .12s;
+  }
+  .company:hover{background:var(--hover)}
+  /* current position: a Max Planck green accent bar on the left edge */
+  .company--current{position:relative}
+  .company--current::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:3px;height:58%;border-radius:0 3px 3px 0;background:#0a6b54}
+  .logo{
+    width:26px;height:26px;border-radius:6px;flex:0 0 26px;position:relative;overflow:hidden;
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;font-family:var(--display);
+  }
+  .logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px}
+  /* When an icon is present, give the box a white bg so the rounded-corner
+     blend is white-on-white (no dark fringe from the brand-color fallback).
+     If the img fails to load it's removed, and the colored fallback returns. */
+  .logo:has(img),.page-logo:has(img){background:#fff !important}
+  .logo img,.page-logo img{border-radius:inherit}
+  /* logos that are a full-bleed solid square (e.g. UvA): no white padding, fill the box */
+  .logo.logo--fill img,.page-logo.logo--fill img{padding:0;background:transparent}
+  .company .meta{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+  .company .name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .company .role{font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .company .dates{display:none;font-size:10.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.85}
+
+  .foot{padding:14px 14px;font-size:12px;color:var(--ink-soft);line-height:1.7}
+  .foot a{font-weight:600}
+  .foot .copy{margin-top:10px;opacity:.7}
+
+  /* mini-rail label hiding */
+  body.mini .rail{width:var(--rail-w-mini)}
+  body.mini .rail .label,
+  body.mini .rail .rail-head span,
+  body.mini .rail .company .meta,
+  body.mini .rail .foot{display:none}
+  body.mini .rail .nav-item,
+  body.mini .rail .company{flex-direction:column;gap:5px;padding:14px 0;font-size:10px;text-align:center}
+  body.mini .rail .nav-item{font-weight:500}
+  body.mini .rail .nav-item .mini-label{display:block;font-size:10px}
+  body.mini .main{margin-left:var(--rail-w-mini)}
+  .mini-label{display:none}
+  body.mini .mini-label{display:block}
+  /* in mini mode, show only Biography, Publications, and the section lists */
+  body.mini .rail .mini-hide{display:none}
+
+  /* ---------- MAIN ---------- */
+  .main{
+    margin-left:var(--rail-w);margin-top:var(--top-h);
+    padding:4px 24px 80px;transition:margin-left .2s ease;
+  }
+
+  /* Biography/home page: no top bar over the page area. The fixed bar only spans
+     the sidebar (keeping the "Rick Akkerman" brand); the page content starts at
+     the very top, where the bar would otherwise be. Desktop only — on mobile the
+     bar is the sole header, so it stays full width. */
+  @media (min-width:721px){
+    html.home .topbar{right:auto;width:var(--rail-w)}
+    html.home .main{margin-top:0;padding-top:18px}
+  }
+
+
+  /* hero banner */
+  .hero{
+    border-radius:0;position:relative;
+    color:var(--ink);padding:0;margin-bottom:16px;
+    display:flex;align-items:flex-start;gap:40px;flex-wrap:wrap;
+  }
+  .hero-text{position:relative;z-index:1;flex:1 1 0;min-width:0}
+  .hero h1{flex:0 0 100%;font-family:var(--display);font-weight:800;font-size:clamp(26px,3.5vw,36px);line-height:1.02;letter-spacing:-.03em;margin:0 0 4px}
+  /* name on the left, social buttons on the right */
+  .hero-head{flex:0 0 100%;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-bottom:8px}
+  .hero-head h1{flex:0 1 auto;margin:0}
+  .hero-head .hero-cta{margin-top:0}
+  .hero p{font-size:16px;color:var(--ink);line-height:1.6;text-align:justify}
+  .hero p + p{margin-top:14px}
+  .hero-cta{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .social-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);
+    border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none;
+    transition:border-color .15s ease,color .15s ease,background .15s ease}
+  .social-btn:hover{border-color:#c9d8ec;color:var(--accent);background:var(--hover)}
+  .social-btn svg{width:17px;height:17px;flex:none}
+  .hero-portrait{position:relative;z-index:1;flex:0 0 auto}
+  .hero-portrait img{display:block;width:270px;height:auto}
+  @media (max-width:720px){ .hero-portrait{margin:0 auto} .hero-portrait img{width:170px} }
+  .btn{padding:11px 22px;border-radius:999px;font-weight:600;font-size:14px;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#bf451f}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.2)}
+
+  .section-title{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:6px 0 18px}
+
+  /* "currently" status strip on the biography landing page */
+  .now-strip{
+    display:flex;align-items:center;gap:12px;margin:0 0 34px;
+    padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:#f7f9fc;
+    font-size:14.5px;line-height:1.5;color:var(--ink-soft);
+  }
+  .now-strip strong{color:var(--ink);font-weight:700}
+  .now-dot{
+    flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:#22a45d;
+    box-shadow:0 0 0 0 rgba(34,164,93,.5);animation:nowpulse 2.4s ease-out infinite;
+  }
+  @keyframes nowpulse{
+    0%{box-shadow:0 0 0 0 rgba(34,164,93,.5)}
+    70%{box-shadow:0 0 0 7px rgba(34,164,93,0)}
+    100%{box-shadow:0 0 0 0 rgba(34,164,93,0)}
+  }
+
+  /* card grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:26px 18px}
+  .card{cursor:default}
+  .thumb{
+    border-radius:14px;aspect-ratio:16/9;position:relative;overflow:hidden;
+    display:grid;place-items:center;color:#fff;
+  }
+  .thumb .big{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.02em;text-align:center;padding:0 20px;z-index:1}
+  .thumb .tag{
+    position:absolute;bottom:9px;right:9px;background:rgba(0,0,0,.78);
+    color:#fff;font-size:12px;font-weight:600;padding:3px 7px;border-radius:6px;z-index:2;
+  }
+  .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.12),transparent 60%)}
+  /* small institution-logo badge in a bottom thumbnail corner (transparent PNG on a white pill) */
+  .thumb-logo{position:absolute;bottom:8px;z-index:3;display:flex;background:rgba(255,255,255,.94);
+    border-radius:5px;padding:3px 5px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+  .thumb-logo--bl{left:8px}
+  .thumb-logo--br{right:8px}
+  .thumb-logo--bcl{left:calc(50% + 8px)}  /* left side of the right half (combined images) */
+  .thumb-logo img{display:block;height:13px;width:auto}
+  .card-body{display:flex;gap:12px;margin-top:12px}
+  .card .logo{width:36px;height:36px;flex:0 0 36px;font-size:14px}
+  .card-meta h3{font-size:16px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+  .card-meta .sub{font-size:13px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+  .card[data-view]{cursor:pointer}
+  .card[data-view]:hover .thumb{filter:brightness(1.06)}
+
+  /* ---------- PAGES (view switching) ---------- */
+  [hidden]{display:none !important}
+
+  .page{max-width:none}
+  .page-eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+  .page-head{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+  .page-logo{
+    width:64px;height:64px;border-radius:14px;flex:0 0 64px;position:relative;overflow:hidden;
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;font-family:var(--display);
+  }
+  .page-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:8px}
+  .page-headmeta h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;line-height:1.05}
+  .page-role{font-size:16px;color:var(--ink);font-weight:600;margin-top:6px}
+  .page-period{font-size:14px;color:var(--ink-soft);margin-top:2px}
+  .page-location{font-size:14px;color:var(--ink-soft);margin-top:2px}
+  /* a second organisation shown beside the main one in the same entry
+     (e.g. CVPR keeps the timeline logo, Eurographics floats to the right) */
+  .page:has(.peer-card){display:flow-root}
+  .peer-card{float:right;width:42%;max-width:330px;margin:2px 0 14px 28px;
+    border:1px solid var(--line);border-radius:16px;padding:18px 20px;background:#fff}
+  .peer-head{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+  .peer-logo{width:52px;height:52px;border-radius:12px;flex:0 0 52px;position:relative;overflow:hidden;
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:17px;font-family:var(--display)}
+  .peer-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:7px}
+  .peer-logo.logo--fill img{padding:0;background:transparent}
+  .peer-logo:has(img){background:#fff !important}
+  .peer-name{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.1}
+  .peer-card .page-p{font-size:15px;margin-bottom:0}
+  @media(max-width:720px){.peer-card{float:none;width:auto;max-width:none;margin:6px 0 16px}}
+  .page-p{font-size:16px;line-height:1.7;color:var(--ink);margin-bottom:14px}
+  .page-list{margin:6px 0 18px 20px;display:flex;flex-direction:column;gap:7px}
+  .page-list li{font-size:15px;line-height:1.5}
+  /* key facts (Grade / Thesis / Focus) in a subtle panel */
+  .page-facts{margin:6px 0 4px;border:1px solid var(--line);border-radius:12px;
+    background:var(--hover);padding:6px 18px}
+  .page-fact{display:flex;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15.5px;line-height:1.5}
+  .page-fact:last-child{border-bottom:none}
+  .page-fact-l{flex:0 0 72px;color:var(--ink-soft);font-weight:600;font-size:12.5px;
+    text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+  .page-fact-v{flex:1;color:var(--ink)}
+  .page-stats{display:flex;flex-wrap:wrap;align-items:flex-start;margin:20px 0 6px}
+  .page-stat{padding:2px 30px;border-left:1px solid var(--line)}
+  .page-stat:first-child{padding-left:0;border-left:none}
+  .page-stat-v{display:flex;align-items:center;min-height:32px;font-family:var(--display);font-size:18px;font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--ink)}
+  .page-stat-v--text{white-space:nowrap}
+  .page-stat-v--wrap{display:block;font-size:18px;font-weight:800;line-height:1.15;letter-spacing:-.01em;white-space:normal}
+  .page-stats{flex-wrap:nowrap}
+  .page-stats .page-stat:has(.page-stat-v--wrap){flex:1 1 0;min-width:0}
+  .page-stat-v--fit{font-size:16px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap}
+  .stat-dl{display:inline-flex;align-items:center;margin-left:11px;font-family:var(--body);font-size:12.5px;font-weight:600;line-height:1;padding:7px 13px;border:1px solid #1565c0;border-radius:6px;color:#1565c0;background:transparent;text-decoration:none;vertical-align:middle;white-space:nowrap;transition:background .15s ease,color .15s ease}
+  .stat-dl:hover{background:#1565c0;color:#fff}
+  .page-stat-l{display:block;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-top:8px}
+  .page-thesis{margin:26px 0 6px;padding:0}
+  .page-thesis-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .page-thesis-title{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.3;margin-top:7px;color:var(--ink);max-width:680px}
+  .page-thesis-grade{display:inline-block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-top:8px}
+  .page-thesis-desc{font-size:14.5px;line-height:1.65;color:var(--ink-soft);margin:8px 0 0;max-width:660px}
+  .course-list{list-style:none;columns:2;column-gap:44px;margin:6px 0 0;padding:0}
+  .course-list li{position:relative;font-size:14.5px;line-height:1.5;color:var(--ink);padding:8px 0 8px 18px;border-bottom:1px solid var(--line);break-inside:avoid}
+  .course-list li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  @media (max-width:560px){ .course-list{columns:1} }
+  .page-listhead{font-size:16px;font-weight:700;color:var(--ink);margin:18px 0 8px}
+  .page-sublisthead{font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;
+    letter-spacing:.04em;margin:12px 0 7px}
+  /* courses / tags as pills */
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:13px;line-height:1;padding:7px 12px;border-radius:999px;
+    background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  /* sub-roles within one organisation (UIF) render as standard Responsibilities
+     bullets (.page-list); the role title is a bold lead-in on each bullet. */
+  .tl-courses{margin-top:10px}
+  /* "In the press" — external article links as side-by-side cards/windows */
+  .press-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:2px}
+  .press-item{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    background:#fff;transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+  .press-item:hover{border-color:#d7d1c6;box-shadow:0 6px 22px rgba(0,0,0,.07);transform:translateY(-2px)}
+  .press-thumb{display:block;aspect-ratio:16/9;overflow:hidden;background:var(--hover)}
+  .press-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+  .press-item:hover .press-thumb img{transform:scale(1.05)}
+  .press-title{padding:14px 16px 0}
+  .press-meta{padding-left:16px;padding-right:16px;padding-bottom:14px}
+  .press-title{display:block;font-family:var(--display);font-weight:700;font-size:15.5px;
+    line-height:1.35;color:var(--ink);transition:color .15s ease}
+  .press-item:hover .press-title{color:var(--accent)}
+  .press-meta{display:block;margin-top:auto;padding-top:12px;font-size:12px;font-weight:600;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:.03em}
+  .press-arr{margin-left:6px;color:var(--accent);text-transform:none}
+  /* embedded "small article" write-up under a page's bullets */
+  .page-article{margin:32px 0 6px;padding-top:26px;border-top:1px solid var(--line);scroll-margin-top:calc(var(--top-h) + 16px)}
+  .page-article-head{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.2;margin:0 0 14px;color:var(--ink);scroll-margin-top:calc(var(--top-h) + 24px)}
+  .page-article-lead{font-size:17px;line-height:1.7;color:var(--ink);font-weight:500;margin:0 0 18px}
+  .page-article-sub{font-family:var(--display);font-size:17px;font-weight:700;margin:24px 0 8px;color:var(--ink)}
+  .page-article-sec:first-child > .page-article-sub:first-child{margin-top:0}
+  .page-pubs-head{margin-top:32px;padding-top:26px;border-top:1px solid var(--line)}
+  .page-article-byline{font-size:13px;font-style:italic;color:var(--ink-soft);margin:-4px 0 12px}
+  .page-article-sec{overflow:hidden}
+  .page-article-fig{float:right;width:340px;max-width:64%;margin:6px 0 14px 26px}
+  .page-article-fig img{display:block;width:100%;height:auto}
+  .page-article-fig figcaption{font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin-top:7px}
+  .page-article-fig--block{float:none;max-width:100%;margin:0 auto 16px}
+  .page-article-fig--block figcaption{text-align:center}
+  .page-article-figrow{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:10px 0 20px}
+  .page-article-figrow figure{margin:0}
+  .page-article-figrow img{display:block;width:100%;height:auto}
+  .page-article-figrow figcaption{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin-top:9px;text-align:center}
+  .page-article-figrow--even img{aspect-ratio:3/2;object-fit:cover}
+  @media (max-width:720px){ .page-article-figrow{grid-template-columns:1fr;gap:18px} }
+  @media (max-width:720px){ .page-article-fig{float:none;width:100%;max-width:100%;margin:6px 0 14px} }
+  .page-article-p{font-size:15.5px;line-height:1.75;color:var(--ink);margin:0 0 14px;text-align:justify}
+  /* inline links inside body text / bullets */
+  .inline-link{color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;font-weight:600}
+  .inline-link:hover{text-decoration-thickness:2px}
+  .inline-arr{display:inline-block;margin-left:2px;font-size:.85em;text-decoration:none}
+  @media (max-width:720px){ .press-list{grid-template-columns:1fr} }
+  /* project cards on the bio page — clickable links into a project write-up */
+  .proj-list{display:flex;flex-direction:row;gap:16px;margin-top:14px;width:100%}
+  @media (max-width:720px){ .proj-list{flex-direction:column} }
+  .proj-card{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--line);
+    border-radius:14px;background:#fff;text-decoration:none;color:var(--ink);
+    transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+  .proj-card:hover{border-color:#c9d8ec;box-shadow:0 6px 22px rgba(0,0,0,.07);transform:translateY(-2px)}
+  .proj-card-thumb{flex:none;width:180px;aspect-ratio:1193/603;border-radius:11px;overflow:hidden;background:#fff}
+  .proj-card-thumb img{width:100%;height:100%;object-fit:contain;display:block}
+  .proj-card-body{flex:1;min-width:0}
+  .proj-card-title{display:block;font-family:var(--display);font-weight:700;font-size:16.5px;line-height:1.3;letter-spacing:-.01em}
+  .proj-card:hover .proj-card-title{color:var(--accent)}
+  .proj-card-sub{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:5px;line-height:1.5}
+  /* square media gallery (e.g. Bramzijgers photos + clip) */
+  .page-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:20px 0 10px}
+  .gallery-item{margin:0;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--hover);border:1px solid var(--line)}
+  .gallery-item img,.gallery-item video{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+  a.gallery-item{display:block;cursor:pointer}
+  .gallery-item--link:hover img,.gallery-item--link:hover video{transform:scale(1.05)}
+  .page-credit{font-size:12px;color:var(--ink-soft);margin:9px 0 0}
+  .page-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+  .page-note{margin-top:18px;padding:12px 16px;border:1px dashed var(--line);border-radius:12px;color:var(--ink-soft);font-size:14px;background:var(--surface)}
+
+  /* publications list — text left, thumbnail right, outlined action buttons */
+  .pub-list{display:flex;flex-direction:column;gap:18px;margin-top:4px}
+  .pub{position:relative;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;padding:20px 22px;
+    border:1px solid var(--line);border-radius:12px;background:#fff;
+    transition:box-shadow .15s ease,border-color .15s ease}
+  .pub:hover{border-color:#d7d1c6;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+  .pub-body{flex:1;min-width:0}
+  .pub-title{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.3;letter-spacing:-.01em}
+  .pub-title a{color:var(--ink);text-decoration:none}
+  .pub-title a:hover{color:var(--accent)}
+  .pub-venue{font-size:13px;color:var(--accent);font-weight:600;margin-top:4px}
+  .pub-summary{font-size:14px;color:var(--ink);margin-top:7px;line-height:1.55}
+  .pub-authors{font-size:13.5px;color:var(--ink-soft);margin-top:7px;line-height:1.5}
+  .pub-authors strong{color:var(--ink);font-weight:700}
+  .pub-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:13px}
+  .pub-btn{display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;line-height:1;
+    padding:7px 13px;border-radius:6px;border:1px solid #1565c0;color:#1565c0;
+    background:transparent;text-decoration:none;transition:background .15s ease,color .15s ease}
+  .pub-btn:hover{background:#1565c0;color:#fff}
+  .pub-cite{font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-left:2px}
+  .pub-extra{position:relative;flex-basis:100%;width:100%;margin:-24px 0 0;padding:0}
+  .pub-photos-toggle{position:absolute;left:50%;top:20px;transform:translate(-50%,-50%);z-index:2;display:flex;align-items:center;gap:7px;padding:0 12px;border:none;background:#fff;cursor:pointer;font-family:var(--body);font-size:13.5px;font-weight:600;letter-spacing:.01em;color:var(--ink-soft);transition:color .15s ease}
+  .pub-photos-toggle:hover{color:var(--ink)}
+  .pub-photos-chev{transition:transform .25s ease;flex:none}
+  .pub-extra.open .pub-photos-chev{transform:rotate(180deg)}
+  .pub-photos-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease}
+  .pub-extra.open .pub-photos-wrap{grid-template-rows:1fr}
+  .pub-photos-inner{overflow:hidden;min-height:0}
+  .pub-photos-inner > *{margin-top:38px}
+  .pub-extra-p{font-size:14.5px;line-height:1.7;color:var(--ink);margin:0 0 14px}
+  .pub-thumb{flex:0 0 200px;width:200px;border-radius:10px;overflow:hidden;
+    border:1px solid var(--line);background:#fff;align-self:center}
+  .pub-thumb img{display:block;width:100%;height:auto}
+  @media(max-width:720px){
+    .pub{flex-direction:column;gap:14px}
+    .pub-thumb{order:-1;width:100%;flex-basis:auto;max-width:320px}
+  }
+
+  /* card grid embedded inside a page (e.g. ICAI interviews/showcase) */
+  .page-cards{margin-top:34px}
+  .page-cards-head{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;
+    margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  /* interview/article cards use portrait thumbnails in a tighter grid */
+  .page-cards .grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+  .page-cards .thumb{aspect-ratio:2/3}
+  /* a double-width card (e.g. a two-person interview with a combined landscape photo) */
+  .page-cards .card--wide{grid-column:span 2}
+  /* match the portrait cards' height exactly: width spans 2 cols + the 18px column-gap,
+     so subtract that gap before applying the portrait 2:3 height ratio */
+  .page-cards .card--wide .thumb{aspect-ratio:auto;height:0;padding-bottom:calc((100% - 18px) * 3 / 4)}
+  @media(max-width:560px){.page-cards .card--wide{grid-column:span 1}.page-cards .card--wide .thumb{height:auto;padding-bottom:0;aspect-ratio:2/3}}
+
+  /* experience feed: entries stack directly under each other at their natural
+     height, reading as one continuous overview rather than one-per-screen. */
+  .exp-snap{scroll-margin-top:var(--top-h);padding:25px 0}
+  /* first entry sits close to the section label in the top bar */
+  html.exp-feed .exp-snap:first-child{padding-top:6px}
+  /* trim the global page bottom padding inside the feed so the last entry
+     (LIDL) doesn't trail a large empty gap */
+  html.exp-feed .main{padding-bottom:16px}
+
+  /* timeline rail: a continuous vertical line down the left of the feed with a
+     node dot beside each company logo. Each section draws its own full-height
+     line segment; because sections stack flush, they read as one line. */
+  html.exp-feed .exp-snap{position:relative;padding-left:56px}
+  html.exp-feed .exp-snap::before{
+    content:"";position:absolute;left:24px;top:0;bottom:0;width:2px;background:var(--line);
+  }
+  html.exp-feed .page-head{position:relative}
+  html.exp-feed .page-head::before{
+    content:"";position:absolute;left:-40px;top:50%;transform:translateY(-50%);
+    box-sizing:border-box;width:18px;height:18px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--accent);z-index:1;
+    box-shadow:0 0 0 5px var(--bg);
+  }
+  @media (max-width:720px){
+    html.exp-feed .exp-snap{padding-left:34px}
+    html.exp-feed .exp-snap::before{left:10px}
+    html.exp-feed .page-head::before{left:-31px;width:16px;height:16px}
+  }
+
+  /* feed timeline: use the company/school logo itself as the timeline node
+     (instead of the plain dot). The logo is lifted out of the header flow and
+     centred on the line; the header text then aligns with the body below. */
+  html.exp-feed .page-head::before{display:none}
+  html.exp-feed .exp-snap{padding-left:128px}
+  /* --tl-x (set in JS) is the line's centre, measured to sit under the section
+     label in the top bar; both the line and the logo node read from it. */
+  html.exp-feed .exp-snap::before{left:calc(var(--tl-x, 54px) - 1px)}
+  html.exp-feed .page-logo{
+    position:absolute;left:calc(var(--tl-x, 54px) - 128px);top:50%;transform:translate(-50%,-50%);
+    flex:none;width:80px;height:80px;z-index:1;box-shadow:0 0 0 5px var(--bg)}
+  @media (max-width:720px){
+    html.exp-feed .exp-snap{padding-left:88px}
+    html.exp-feed .exp-snap::before{left:33px}
+    html.exp-feed .page-logo{left:-54px;width:64px;height:64px}
+  }
+
+  /* long-form interview / article reading layout */
+  .article{max-width:760px;margin:0 auto}
+  .article-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;
+    color:var(--ink-soft);text-decoration:none;margin-bottom:22px}
+  .article-back:hover{color:var(--accent)}
+  .article-kind{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .article-title{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.15;
+    letter-spacing:-.02em;margin:10px 0 0}
+  .article-byline{font-size:14px;color:var(--ink-soft);margin-top:14px;line-height:1.5}
+  .article-byline strong{color:var(--ink);font-weight:700}
+  .article-standfirst{font-size:18px;line-height:1.55;color:var(--ink);margin:24px 0 0;
+    font-weight:700;text-align:justify}
+  /* bio of the interviewee, placed under the abstract with their photo beside it */
+  .article-bio-row{display:flex;gap:24px;align-items:flex-start;margin:22px 0 10px}
+  .article-bio-text{flex:1 1 auto;font-size:14.5px;line-height:1.6;color:var(--ink-soft);text-align:justify}
+  .article-hero{flex:0 0 150px;width:150px;margin:0;border-radius:14px;overflow:hidden;background:#f1ede4}
+  .article-hero img{display:block;width:100%;height:auto}
+  @media(max-width:720px){
+    .article-bio-row{flex-direction:column;gap:18px}
+    .article-hero{flex-basis:auto;width:100%;max-width:320px}
+  }
+  .article-bio{background:#f7f4ec;border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin:26px 0;font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+  .article-bio strong{color:var(--ink);font-weight:700}
+  .article-body{margin-top:6px}
+  .article-body p{font-size:16.5px;line-height:1.7;margin:18px 0;color:var(--ink);text-align:justify}
+  .article-turn strong{color:var(--ink);font-weight:700}
+  .article-q{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.35;
+    letter-spacing:-.01em;color:var(--accent);margin:34px 0 6px;text-align:justify}
+  .article-pull{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.4;
+    letter-spacing:-.01em;color:var(--ink);margin:30px 0;padding:4px 0 4px 20px;
+    border-left:3px solid var(--accent)}
+  .article-note{margin:36px 0 0;padding:24px 0 0;border-top:1px solid var(--line);
+    font-style:italic;font-size:15.5px;line-height:1.7;color:var(--ink-soft);text-align:left}
+  .article-note a{color:var(--accent);word-break:break-word}
+  @media(max-width:720px){
+    .article-title{font-size:27px}
+    .article-standfirst{font-size:17px}
+    .article-body p{font-size:16px}
+  }
+  /* media only loads when its page is opened (built on navigation; video uses preload=none) */
+  .page-media{margin:8px 0 24px;border-radius:16px;overflow:hidden;max-width:680px;background:#000}
+  .page-media video,.page-media img{display:block;width:100%;height:auto}
+  .page-media.embed{position:relative;aspect-ratio:16/9}
+  .page-media.embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  @media(max-width:900px){
+    .hero{padding:0}
+  }
+  @media(max-width:720px){
+    body{--rail-w:0px}
+    .rail{transform:translateX(-100%);width:248px;box-shadow:0 0 40px rgba(0,0,0,.18)}
+    body.drawer .rail{transform:translateX(0)}
+    .main{margin-left:0}
+    .topbar-section{display:none}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ======= TOP BAR ======= -->
+  <header class="topbar">
+    <div class="top-left">
+      <a class="brand" href="#home" data-view="home">
+        <span class="first">Rick</span>
+        <span class="last">Akkerman</span>
+      </a>
+    </div>
+
+    <div class="top-spacer"></div>
+
+    <!-- current section label (set per page; aligned above the page content) -->
+    <div class="topbar-section" id="topSection"></div>
+  </header>
+
+  <!-- ======= SIDEBAR ======= -->
+  <nav class="rail" id="rail">
+
+    <div class="rail-section">
+      <a class="nav-item active" href="#home" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        <span class="label">Biography</span><span class="mini-label">Bio</span>
+      </a>
+      <a class="nav-item" href="#home" data-scroll="pubs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"/><path d="M9 8h5M9 11h5"/></svg>
+        <span class="label">Publications</span><span class="mini-label">Pubs</span>
+      </a>
+      <a class="nav-item" href="#home" data-scroll="projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H3z"/><path d="M3 7V5a2 2 0 0 1 2-2h3l2 2"/></svg>
+        <span class="label">Projects</span><span class="mini-label">Projects</span>
+      </a>
+    </div>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <div class="rail-section mini-hide" id="expSection">
+      <div class="rail-head rail-head--toggle" id="expToggle"><span>Experience</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+
+      <!-- EDIT YOUR COMPANIES HERE ↓↓↓  (logo color, initials, name, role) -->
+      <a class="company company--current" href="#mpi" data-view="mpi">
+        <span class="logo" style="background:#0a6b54">MPI<img src="data/icons/mpi.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Max Planck Institute</span><span class="role">Research Engineer</span><span class="dates">Feb 2024 – Present</span></span>
+      </a>
+      <a class="company" href="#icai" data-view="icai">
+        <span class="logo" style="background:#1f3a93">ICAI<img src="data/icons/icai.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">ICAI</span><span class="role">Communications Manager</span><span class="dates">Aug 2022 – Mar 2023</span></span>
+      </a>
+      <a class="company" href="#loyensloeff" data-view="loyensloeff">
+        <span class="logo logo--fill" style="background:#1a1714">L&L<img src="data/icons/loyens_loeff.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Loyens &amp; Loeff</span><span class="role">Working Student in Legal Tech</span><span class="dates">Jun 2023 – Aug 2023</span></span>
+      </a>
+      <a class="company" href="#perron038" data-view="perron038">
+        <span class="logo" style="background:#16a085">P38<img src="data/icons/perron038.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Perron038</span><span class="role">Intern</span><span class="dates">Feb 2021 – May 2021</span></span>
+      </a>
+      <a class="company" href="#tembo" data-view="tembo">
+        <span class="logo logo--fill" style="background:#e67e22">TE<img src="data/icons/tembo.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Tembo Group</span><span class="role">Intern</span><span class="dates">May 2021 – Aug 2021</span></span>
+      </a>
+      <a class="company" href="#lidl" data-view="lidl">
+        <span class="logo logo--fill" style="background:#0050aa">LDL<img src="data/icons/lidl.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">LIDL Netherlands</span><span class="role">Customer Service</span><span class="dates">Jul 2018 – Mar 2019</span></span>
+      </a>
+      <!-- EDIT YOUR COMPANIES HERE ↑↑↑ -->
+
+    </div>
+
+    <!-- ===== EDUCATION ===== -->
+    <div class="rail-section mini-hide">
+      <div class="rail-head rail-head--toggle"><span>Education</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+
+      <!-- EDIT YOUR SCHOOLS HERE ↓↓↓  (logo color, initials, name, programme) -->
+      <a class="company" href="#uva-msc" data-view="uva-msc">
+        <span class="logo logo--fill" style="background:#000">UvA<img src="data/icons/uva.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">University of Amsterdam</span><span class="role">MSc Artificial Intelligence</span><span class="dates">Sep 2021 – Aug 2024</span></span>
+      </a>
+      <a class="company" href="#ut-bsc" data-view="ut-bsc">
+        <span class="logo logo--fill" style="background:#0d2d5c">UT<img src="data/icons/ut.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">University of Twente</span><span class="role">BSc Technology, Liberal Arts &amp; Sciences</span><span class="dates">2018 – 2021</span></span>
+      </a>
+      <a class="company" href="#huizermaat" data-view="huizermaat">
+        <span class="logo" style="background:#4a7c59">HM<img src="data/icons/huizermaat.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Huizermaat</span><span class="role">VWO</span><span class="dates">Sep 2012 – Jun 2018</span></span>
+      </a>
+      <!-- EDIT YOUR SCHOOLS HERE ↑↑↑ -->
+
+    </div>
+
+    <!-- ===== VOLUNTEERING ===== -->
+    <div class="rail-section collapsed mini-hide">
+      <div class="rail-head rail-head--toggle"><span>Volunteering</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+
+      <!-- EDIT YOUR VOLUNTEERING HERE ↓↓↓  (logo color, initials, name, role) -->
+      <a class="company" href="#if-fellows" data-view="if-fellows">
+        <span class="logo" style="background:#00a6d6">IF<img src="data/icons/uif.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">University Innovation Fellows</span><span class="role">Fellow</span><span class="dates">Oct 2019 – Mar 2024</span></span>
+      </a>
+      <a class="company" href="#dih-hero" data-view="dih-hero">
+        <span class="logo" style="background:#c0392b">DH<img src="data/icons/dih_hero.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">DIH-HERO</span><span class="role">Grants &amp; Contracts Support</span><span class="dates">Feb 2021 – Aug 2021</span></span>
+      </a>
+      <a class="company" href="#autumn-challenge" data-view="autumn-challenge">
+        <span class="logo" style="background:#d4791f">AC<img src="data/icons/autumn_challenge.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Autumn Challenge</span><span class="role">Coach</span></span>
+      </a>
+      <a class="company" href="#bramzijgers" data-view="bramzijgers">
+        <span class="logo" style="background:#2c5f8a">BR<img src="data/icons/bramzijgers.jpeg" alt="" onerror="this.remove()"></span>
+        <span class="meta"><span class="name">Bramzijgers</span><span class="role">Secretary, De Bramzijgers</span><span class="dates">Jan 2017 – Aug 2018</span></span>
+      </a>
+      <!-- EDIT YOUR VOLUNTEERING HERE ↑↑↑ -->
+
+    </div>
+
+  </nav>
+
+  <!-- ======= MAIN ======= -->
+  <main class="main">
+
+   <!-- HOME VIEW (default) — the biography landing page -->
+   <div id="view-home">
+     <section class="hero">
+       <div class="hero-head">
+         <h1>Biography</h1>
+         <div class="hero-cta">
+           <a class="social-btn" href="data/pages/biography/Resume_AkkermanRick.pdf" download="Resume_AkkermanRick.pdf" aria-label="Download CV">
+             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h7l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm6.5 1.5V8H17l-4.5-4.5zM8 12.5h8V14H8v-1.5zm0 3h8V17H8v-1.5z"/></svg>
+             <span>CV</span>
+           </a>
+           <a class="social-btn" href="https://github.com/rickakkerman" target="_blank" rel="noopener" aria-label="GitHub">
+             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+             <span>GitHub</span>
+           </a>
+           <a class="social-btn" href="https://scholar.google.com/citations?user=NN8dDagAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar">
+             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+             <span>Google Scholar</span>
+           </a>
+           <a class="social-btn" href="https://www.linkedin.com/in/rickakkerman/" target="_blank" rel="noopener" aria-label="LinkedIn">
+             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.3 18v-7.7H5.8V18h2.5zM7 9.2a1.45 1.45 0 1 0 0-2.9 1.45 1.45 0 0 0 0 2.9zM18.3 18v-4.2c0-2.2-1.2-3.3-2.8-3.3-1.3 0-1.9.7-2.2 1.2v-1.4h-2.5V18h2.5v-4.3c0-.2 0-.5.1-.6.2-.4.5-.9 1.2-.9.8 0 1.2.6 1.2 1.6V18h2.5z"/></svg>
+             <span>LinkedIn</span>
+           </a>
+           <a class="social-btn" href="mailto:itsrickakkerman@gmail.com" aria-label="Email">
+             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.01L12 12l8-5.99V6H4zm16 2.24-7.4 5.55a1 1 0 0 1-1.2 0L4 8.24V18h16V8.24z"/></svg>
+             <span>Email</span>
+           </a>
+         </div>
+       </div>
+       <div class="hero-text">
+         <p>Research Engineer at the Max Planck Institute for Intelligent Systems in Tübingen, working on 3D digital humans in the team of Michael J. Black. My research centers on parametric body models (SMPL-X, MANO, and FLAME) and their use in human-object interaction, video diffusion models, and face reconstruction. Day-to-day, I work with PyTorch, building data and rendering pipelines, then fine-tuning and evaluating models. At Max Planck I first-authored InterDyn (CVPR 2025), on video diffusion models for interactive object dynamics, and co-authored a second CVPR 2025 paper on face reconstruction from heavily occluded images.</p>
+         <p>Before joining Max Planck, I completed my MSc in Artificial Intelligence at the University of Amsterdam and a BSc in Technology, Liberal Arts &amp; Sciences at the University of Twente. Along the way, I worked on legal tech at Loyens &amp; Loeff, and interned at Perron038, where I built a thermal-imaging system to detect leaks inside sealed detergent-pod boxes, and at Tembo Group, where I mapped the quality trade-offs of federated learning.</p>
+       </div>
+       <div class="hero-portrait"><img src="data/pages/biography/AkkermanRick.png" alt="Rick Akkerman" loading="lazy"></div>
+     </section>
+
+     <h2 class="section-title" id="pubs" style="margin-top:40px">Publications</h2>
+     <div id="homeFeatured"></div>
+
+     <h2 class="section-title" id="projects" style="margin-top:40px">Projects</h2>
+     <div class="proj-list">
+       <a class="proj-card" href="#project-perron038" data-view="project-perron038">
+         <span class="proj-card-thumb"><img src="data/pages/experience/perron038/box1.png" alt="" loading="lazy" onerror="this.closest('.proj-card-thumb').remove()"></span>
+         <span class="proj-card-body">
+           <span class="proj-card-title">Building a dataset for detecting leaking detergent pods with thermal imaging</span>
+           <span class="proj-card-sub">A non-destructive inspection method using active thermography, from my internship at Perron038.</span>
+         </span>
+       </a>
+       <a class="proj-card" href="#project-tembo" data-view="project-tembo">
+         <span class="proj-card-thumb"><img src="data/pages/experience/tembo/federated-learning.svg" alt="" loading="lazy" onerror="this.closest('.proj-card-thumb').remove()"></span>
+         <span class="proj-card-body">
+           <span class="proj-card-title">Mapping the quality trade-offs of federated learning</span>
+           <span class="proj-card-sub">A systematic review and decision framework for businesses weighing privacy, efficiency, and security, from my Honours thesis at Tembo.</span>
+         </span>
+       </a>
+     </div>
+   </div><!-- /view-home -->
+
+   <!-- DYNAMIC PAGE VIEW (built on navigation; heavy media loads only here) -->
+   <div id="view-page" hidden></div>
+
+  </main>
+
+<script>
+  // collapse / drawer toggle for the sidebar
+  const body = document.body;
+  // collapse / expand any toggleable rail section
+  document.querySelectorAll('.rail-head--toggle').forEach(head => {
+    head.addEventListener('click', () => {
+      head.closest('.rail-section').classList.toggle('collapsed');
+    });
+  });
+
+  /* ---------- auto-fit sidebar width ----------
+     Size the rail once so the longest menu text is fully readable (no
+     truncation). Measured automatically, so it adapts if entries change. */
+  const rail = document.getElementById('rail');
+  const root = document.documentElement;
+  const MIN_RAIL = parseInt(getComputedStyle(root).getPropertyValue('--rail-w')) || 248;
+  const MAX_RAIL = 318;   // hard ceiling at the current natural width: longer labels ellipsis-truncate instead of widening the rail
+
+  function fitRail(){
+    // collapsed sections hide their items, so expand all to measure true width
+    const collapsed = [...rail.querySelectorAll('.rail-section.collapsed')];
+    collapsed.forEach(s => s.classList.remove('collapsed'));
+    const prev = rail.style.width;
+    rail.style.width = 'max-content';                 // shrink-to-fit -> natural content width
+    const w = Math.ceil(rail.getBoundingClientRect().width) + 4;  // tiny buffer
+    rail.style.width = prev;                          // restore
+    collapsed.forEach(s => s.classList.add('collapsed'));
+    root.style.setProperty('--rail-w', Math.min(MAX_RAIL, Math.max(MIN_RAIL, w)) + 'px');
+  }
+  fitRail();
+
+  /* =====================================================================
+     PAGE CONTENT  ·  EDIT YOUR PAGES HERE ↓↓↓
+     One entry per sidebar item. Fields:
+       eyebrow  – small label above the title (section name)
+       name     – page title
+       role     – subtitle (job title / programme)
+       period   – dates
+       logo     – { color:'#hex', initials:'XX', img:'data/icons/x.png' }  (img optional)
+       body     – array of paragraphs
+       bullets  – array of list items (optional)
+       links    – array of { label, href, download? } (optional)
+       media    – OPTIONAL, loads ONLY when this page is opened:
+                  { type:'video',   src:'data/clip.mp4', poster:'...' }
+                  { type:'youtube', id:'VIDEO_ID' }
+                  { type:'image',   src:'data/pic.jpg' }
+     'home' is the rich static section above and has no entry here.
+     ===================================================================== */
+  const PAGES = {
+    publications: {
+      eyebrow:'Research', name:'Publications',
+      pubs:[
+        {
+          title:'InterDyn: Controllable Interactive Dynamics with Video Diffusion Models',
+          authors:'Rick Akkerman, Haiwen Feng, Michael J. Black, Dimitrios Tzionas, Victoria Fernández Abrevaya',
+          venue:'CVPR 2025',
+          summary:'InterDyn is a video diffusion framework for controllable interactive dynamics: conditioned on a single image and the motion of a driving object, it synthesizes a video of the resulting motion and interactions throughout the rest of the scene, showing that video diffusion models possess an implicit understanding of physics, such as collisions and forces, without an explicit simulator.',
+          cited:28,
+          thumb:'data/publications/interdyn/interdyn_thumbnail.gif',
+          links:[{label:'PDF', href:'data/publications/interdyn/interdyn_paper.pdf'}, {label:'Supplementary', href:'data/publications/interdyn/interdyn_suppmat.pdf'}, {label:'arXiv', href:'https://arxiv.org/abs/2412.11785'}, {label:'Project', href:'https://interdyn.is.tue.mpg.de/'}, {label:'Code', href:'https://github.com/rickakkerman/InterDyn'}, {label:'Poster', href:'data/publications/interdyn/interdyn_poster.pdf', download:true}]
+        },
+        {
+          title:'OFER: Occluded Face Expression Reconstruction',
+          authors:'Pratheba Selvaraju, Victoria Fernández Abrevaya, Timo Bolkart, Rick Akkerman, Tianyu Ding, Faezeh Amjadi, Ilya Zharkov',
+          venue:'CVPR 2025',
+          summary:'OFER is a diffusion-based method for 3D face reconstruction from heavily occluded images: instead of a single guess, it generates and ranks multiple plausible hypotheses for the face shape and expression, capturing the ambiguity of what lies behind the occlusion.',
+          cited:5,
+          thumb:'data/publications/ofer/ofer_thumbnail.gif',
+          links:[{label:'PDF', href:'data/publications/ofer/ofer_paper.pdf'}, {label:'Supplementary', href:'data/publications/ofer/ofer_suppmat.pdf'}, {label:'arXiv', href:'https://arxiv.org/abs/2410.21629'}, {label:'Project', href:'https://ofer.is.tue.mpg.de/'}, {label:'Code', href:'https://github.com/prathebaselva/OFER'}]
+        },
+        {
+          title:'[Re] Explaining in Style: Training a GAN to Explain a Classifier in StyleSpace',
+          authors:'Noah van der Vleuten, Tadija Radusinović, Rick Akkerman, Meilina Reksoprodjo',
+          venue:'MLRC 2021',
+          summary:'Our reproducibility study of StylEx. We train a StyleGAN whose StyleSpace coordinates map to the visual attributes that drive a classifier’s predictions, so its decisions can be explained and edited counterfactually. We re-implemented the method and tested how well its explanations and central claims held up. This work was presented as a poster at NeurIPS by Noah van der Vleuten.',
+          cited:1,
+          thumb:'data/publications/explaining/explaining_thumbnail.gif',
+          links:[{label:'PDF', href:'data/publications/explaining/explaining_paper.pdf'}, {label:'ReScience', href:'https://rescience.github.io/bibliography/Vleuten_2022.html'}, {label:'Code', href:'https://github.com/NoahVl/Explaining-In-Style-Reproducibility-Study'}, {label:'Slides', href:'data/publications/explaining/explaining_slides.pdf'}, {label:'Poster', href:'data/publications/explaining/explaining_poster.pdf', download:true}]
+        }
+      ]
+    },
+
+    /* ----- EXPERIENCE ----- */
+    mpi:{
+      eyebrow:'Experience', name:'Max Planck Institute for Intelligent Systems', role:'Research Engineer', type:'Full-time',
+      period:'Feb 2024 – Present · 2 yrs 5 mos', location:'Tübingen, Baden-Württemberg, Germany · On-site',
+      logo:{color:'#0a6b54', initials:'MPI', img:'data/icons/mpi.jpeg'}, accent:'#3f8f80',
+      body:['3D computer vision and generative AI for digital humans (SMPL-X, diffusion models, VLMs)'],
+      bullets:[
+        'First-authored InterDyn (CVPR 2025), on video diffusion models for object dynamics, and co-authored a second CVPR 2025 paper on occluded face expression reconstruction',
+        {html:'Gave a spotlight talk at the <a class="inline-link" href="https://agents-in-interactions.github.io/" target="_blank" rel="noopener">Agents in Interaction: From Humans to Robots (H2R) workshop<span class="inline-arr">↗</span></a> at CVPR 2025'},
+        'Worked across the full AI stack for digital humans, including VLMs, video diffusion, and the SMPL family (SMPL-X, FLAME, MANO)',
+        'Served as a reviewer for CVPR 2026 and Eurographics 2026',
+        'Proficient in Python, PyTorch, Hugging Face Transformers, PyTorch3D (differentiable rendering), smplx, PyRender/EGL (headless cluster rendering), NumPy, with distributed multi-GPU training on A100/H100 clusters via HTCondor'
+      ]
+      // To showcase a result video that loads only when this page is open, add e.g.:
+      // , media:{ type:'video', src:'data/mpi-demo.mp4' }
+    },
+    loyensloeff:{
+      eyebrow:'Experience', name:'Loyens & Loeff', role:'Working Student in the Technology & Innovation department', type:'Part-time',
+      period:'Jun 2023 – Aug 2023 · 3 mos', location:'Amsterdam, Noord Holland, Netherlands · On-site',
+      logo:{color:'#1a1714', initials:'L&L', img:'data/icons/loyens_loeff.jpeg', fill:true}, accent:'#0a5896',
+      body:['Supported the modernization of legal work at a leading law firm through AI and legal tech adoption'],
+      bullets:[
+        'Contributed to the implementation and adoption of AI-powered legal tech applications',
+        'Researched and analysed developments in the legal AI market (automated drafting, and related tools)',
+        'Advised on the selection of AI and legal tech solutions for specific business cases'
+      ]
+    },
+    icai:{
+      eyebrow:'Experience', name:'Innovation Center for Artificial Intelligence', role:'Communication Manager', type:'Self-employed',
+      period:'Aug 2022 – Mar 2023 · 8 mos', location:'Amsterdam, Noord Holland, Netherlands · Hybrid',
+      logo:{color:'#1f3a93', initials:'ICAI', img:'data/icons/icai.jpeg'}, accent:'#d4791c',
+      body:['Grew the public profile of UvA’s AI innovation center and made its AI-for-good research accessible to a wider audience'],
+      bullets:[
+        'Created, edited, and published all content across the website, LinkedIn, and social media channels',
+        'Led interview campaigns with leading AI researchers across the Netherlands, translating complex technical concepts into accessible public insights',
+        'Drove event attendance, supported event coordination, and managed post-event follow-up, including recaps and thank-you communications',
+        'Built the ICAI website presence for the 17 new public-private labs launched under LTP ROBUST'
+      ],
+      cards:{
+        heading:'Interviews',
+        items:[
+          {view:'interview-bob-huisman', title:'Bob Huisman, NS', sub:'On AI, optimization, and the future of railway planning',
+            thumb:'data/pages/experience/icai/interviews/bob-huisman/bob-huisman.jpg', logos:[{src:'data/logos/ns.png', pos:'bl'}]},
+          /* hidden from the page (kept for later):
+          {view:'interview-nava-tintarev', title:'Nava Tintarev, Maastricht University', sub:'On explainable AI, news diversity, and trustworthy media',
+            thumb:'data/pages/experience/icai/interviews/nava-tintarev/nava-tintarev.jpeg', logos:[{src:'data/logos/mu.png', pos:'bl'}]},
+          {view:'interview-keelin-phillip', title:'Keelin Murphy, Radboudumc', sub:'On low-cost medical imaging, deep learning, and the BabyChecker',
+            thumb:'data/pages/experience/icai/interviews/keelin-phillip/keelin.jpg', logos:[{src:'data/logos/rad.png', pos:'bl'}]},
+          */
+          /* hidden from the page (kept for later):
+          {view:'interview-chiem-congcong', title:'Chiem van Straaten & Congcong Sun, VU/KNMI · WUR', sub:'On machine learning in agriculture and weather forecasting',
+            thumb:'data/pages/experience/icai/interviews/chiem-congcong/chiem-congcong.jpg', wide:true, logos:[{src:'data/logos/vu.png', pos:'bl'}, {src:'data/logos/wur.png', pos:'bcl'}]}
+          */
+        ]
+      }
+    },
+
+    'interview-bob-huisman':{
+      type:'article', eyebrow:'Interview',
+      title:`The Complexities of Train Schedule Management: A Look at NS’s Planning Process and the Push for Optimization`,
+      meta:{name:'Bob Huisman', role:'Manager R&D Hub Logistics, NS', date:'March 29, 2023'},
+      hero:'data/pages/experience/icai/interviews/bob-huisman/bob-huisman.jpg',
+      back:{label:'ICAI', view:'icai'},
+      standfirst:`Train schedules are a crucial part of our daily lives, but have you ever thought about the complexity behind creating them? From ensuring seats are available to deploying personnel, there are numerous factors to consider. Despite significant advancements in planning automation, there is still room for improvement, especially in hub planning optimization. So, what is happening under the hood at NS, and why is optimizing railway planning so challenging? We interviewed Bob Huisman, Manager of Research and Development Hub Logistics at NS, to learn more about how AI is revolutionizing the train scheduling management process.`,
+      bio:`Bob Huisman is a respected figure in the railway industry, with his career spanning several decades. Huisman currently holds the position of Manager Research & Development Hub Logistics at NS, where he is responsible for delivering innovative methods and tools for planning and scheduling shunting-related processes at railway hubs, as well as assessing the logistic process capacity of railway hubs. Beyond the technical and scientific aspects of his work, Huisman sees it as an opportunity to make a social contribution. He describes himself as ‘having one foot firmly planted in the business world and the other in academia’. His career path is a testament to his ability to bridge the gap between research, development, creativity, and challenging problems. Huisman is one of the principal investigators of the LTP ROBUST programme and the chair of the users’ committee.`,
+      blocks:[
+        {q:`What does train schedule management at NS actually involve?`},
+        {p:`‘At first glance, the process of train schedule management may seem simple: travelers at the station, a train ready to board.’ But as Huisman points out, it is actually a complex interplay of factors, while peering into the direction of Utrecht Central Station, one of the important hubs in the railway network. The hub planning, as part of the overall railway planning, involves ensuring trains are in the correct composition to maximize seat availability, that they arrive at the right platform at the right time, and that they are in good technical condition. Additionally, once a train reaches its final destination, it must be checked for technical issues, cleaned, potentially rearranged, and parked in a way that maximizes space efficiency.`},
+        {p:`But that’s not all. Railway planning and control involve fleet assignment and the deployment of personnel, which comes with its own set of complicated and important limiting factors. Employment conditions, work variation, and the ability of colleagues to come home at the end of the day are just some of the factors that the team of Huisman must take into account. ‘Train schedule management is almost paradoxical. As a traveler, you may experience that we have one timetable during the entirety of the year, but under the hood, the rail sector makes a unique plan for every single day of the year. This involves planning for the timetable, fleet and staff, as well as for the 34 hubs (the stations with connected yards where multiple train lines converge), months in advance.’`},
+        {p:`Over the past two decades, NS has experienced a significant increase in automation in network planning. However, there is still no automation in hub planning, which Huisman notes as remaining an obstacle to overcome. Currently, this daunting task is solely on the shoulders of human hub planners, who are responsible for what is called the “knitting process”. ‘The “knitting process” involves juggling a multitude of factors simultaneously and making decisions in real-time, ensuring that passengers arrive at their destinations safely and smoothly.’`},
+        {q:`How do those train-scheduling experts manage to make everything run like clockwork?`},
+        {p:`‘It is a multi-step process. First, we create a timetable, then assign our fleet, and lastly assign our colleagues.’ Albeit the largest, NS is only one of the 7 Dutch operators on the Dutch rail network, with ProRail responsible for infrastructure management, capacity allocation, and traffic control. Huisman notes that planning NS’s train operation involves multiple iterations before arriving at the final basic pattern, which is then translated into a blueprint for each weekday, and subsequently each specific day. The schedule is finalized a month in advance for a specific calendar day, and from then on, NS can still make adjustments up to two days prior. ‘Once the plans are handed over for operational execution, controllers at ProRail and NS must act quickly in the event of a collision, malfunction, or employee illness. At that moment, it resembles tinkering more than actual planning by optimization’, Huisman notes.`},
+        {p:`NS has been making significant progress since 2015 towards automating the hub planning, but Huisman emphasizes that there are many “dirty details” that need to be taken into account. One of the most gratifying moments of this project came in 2020, just before the onset of the pandemic. ‘We were able to demonstrate based on a proof of concept that we are going to make it’, Huisman recalls. ‘Moments like these, when colleagues have confidence in the success of a project and more resources become available, those keep me young. I have resolved that when I retire, to have this project standing,’ he says with a sense of pride. ‘This project represents a unique collaboration with young researchers, a continuous flow of PhD and master students, and has been one of the most personally rewarding projects of my career.’`},
+        {q:`Why is automation and optimization so important?`},
+        {p:`‘Two goals for the rail system are difficult to reconcile: on the one hand, meeting a growing demand for transport, and, on the other hand, a robust operation. The driving force for automated hub-planning support is the need to fix the plans as late as possible and be able to make changes online. That will improve the robustness of the transportation process, rail infrastructure usage, and seat availability,’ Huisman notes.`},
+        {p:`Currently, to anticipate uncertainties and unforeseen disruptions, slack is incorporated into the planning, with respect to both space and time. This slack allows railroad planners to be flexible and deal with details that will become clear on the day of operation itself; it gives them space to breathe when things go wrong. ‘Reducing slack to facilitate future passenger volumes increases the risk of a domino effect of disruptions; however, fast automated support for planning and control may compensate for this.’ All of these challenges beg the question: how do we achieve sustainable growth, act more dynamically, and be more robust, while using our existing resources more efficiently?`},
+        {q:`What makes the planning process so difficult?`},
+        {p:`‘Good question. Now, picture the entire rail system as a massive, interconnected wirework, a complex maze that requires meticulous planning to operate smoothly. Countless variables can impact the system, making optimization a daunting task. It is not just a matter of flipping a few switches, pushing a few buttons, and moving a few trains around.’`},
+        {p:`‘Hub planning is a combinatorial problem with an enormous search space in which it is hard to find good and feasible solutions. Moreover, the need to fix plans as late as possible requires modeling many dirty details of the real world and complex safety rules, which excludes linear optimization methods. When we started in 2015, hub planning had been the topic for a well-known international competition in the field of Operation Research. Curious as we were, we reached out to all the competition’s prize winners to see if they knew something we did not. Eventually, we concluded that no practical solution had been found yet, which was why we decided to set up a long-term research and development program ourselves. One way or another, we had to find a way. Together with our academic partners, we finally succeeded in building a working system, mainly based on powerful local search, combined with other methods like linear optimization and constraint programming. We coined it the Hybrid Integrated Planning method (HIP). Although the system generates plans that are acceptable to professional planners, continuation of the research is needed to enhance the system’s functionality.’`},
+        {p:`‘Following the progress made by DeepMind, preceding AlphaZero, we started a research track specifically focused on applying deep-reinforcement learning to multi-agent pathfinding. The idea was to build up a logistics plan by generating a chain of individual actions, representing train shunting movements. After six years of research together with our academic partners, we found that brute force local search still outperformed our various complex reinforcement learning approaches, even on simplified models of reality. Taking a step back to see the forest for the trees, we halted the program and shifted our focus.`},
+        {p:`Our current research direction is aimed at using machine learning to complement local search, constrained programming, and linear optimization. The challenge is to find and modify plans more quickly, specifically plans that are easily understood by humans. To build a system that exhibits some intelligent behavior in the future, it must be able to learn from previous situations and to communicate at some abstract level with its users. We still have a long way to go, which asks for perseverance and creativity’, Huisman notes.`},
+        {q:`Automation is increasingly seen not as replacing humans, but as humans and machines complementing each other toward a common goal. What are your thoughts on this?`},
+        {p:`‘In our unique use case, we are looking for automatic tools to support people’, Huisman emphasized. ‘Hub planning is a challenge that humans are quite good at and a task that requires substantial creativity, ingenuity, and the ability to color outside the lines, but it takes a lot of time. On the other hand, algorithms can speed up the planning processes, but currently cannot handle their full complexity. That is why we are focused on creating systems that help people to adjust the “knitting process” more efficiently; reducing slack and maximizing space usage to meet the growing demand for train travel.’`},
+        {p:`When it comes to AI, Huisman has a unique perspective. ‘AI research can bring us closer to understanding human intelligence, yes. However, as long as we do not understand and have not defined human intelligence, stop talking about artificial intelligence that has to replace humans.’ Instead, Huisman believes that we should focus on building super tools that exhibit intelligent behavior, regardless of whether there is a steam engine or neural network powering it. ‘I see neural networks and reinforcement learning as ingredients, among others, to create value’, Huisman explained, adding that it is all about developing an overall system that can deal with the intricacies of logistic planning in cooperation with humans. ‘AI has the potential to disrupt the approach we take in this, but it is not just about generating plans automatically; you have to communicate the output to planners and make it understandable to them, give humans control over plan qualities, and link the output to the systems of other parties.’`},
+        {q:`ICAI’s new LTP ROBUST program launches 17 labs focused on trustworthy AI for societal challenges. Can you elaborate on the importance of trust in AI systems, and your role in the program?`},
+        {p:`‘Trust is a crucial factor in the adoption of AI systems. Our perspective is that the public, customers, travelers, patients, users, and authorities all base their judgment not only on the functionality of the AI algorithm in isolation. Rather, they base it on the whole of interacting ICT, the organization behind it, the procedures put in place to regulate it, the UI, and the availability of the system. Trustworthiness of an individual AI algorithm is a necessary, but not a sufficient condition, for its effective use in a system. Therefore, research into creating such AI systems necessitates a symbiotic relationship between academia and industry. In the end, private or governmental organizations set the specifications of the system, design and build the system, and operate the system over the years. In LTP, research, development, and system engineering meet to obtain social impact by operational trustworthy systems.’`},
+        {p:`Trust is also contextual and domain-specific; the risks of a medical diagnosis differ from the risks of logistics planning or music recommendation, and people rely on different systems in different ways. The program’s approach is to start with a system vision and a targeted research question for each lab, with the private partners playing a vital role in validating the output and asking the right questions. ‘While the validation and questioning may vary for different fields, the general approach to winning the trust of the user can be similar. As one of the principal investigators and the chairman of the overarching user committee, my role is to oversee the cooperation between the partners and ensure knowledge transfer between labs.’`},
+        {q:`The RAIL Lab, a collaboration between TU Delft, Utrecht University, ProRail, and NS, aims to build algorithmic support for capacity planning that human experts actually trust. What role does explainable AI play in earning that trust?`},
+        {p:`‘Explainability is often seen from the research world as: if I could just explain why my algorithm came to this conclusion, and if I change something about my input, how would my evaluation change? It is almost an internal accountability from your algorithm to the outside world, which is necessary, but might only be sufficient to accept or reject an individual prediction of the system. The question is whether that is sufficient for humans to use and accept the system as a sparring partner for decision support.’`},
+        {p:`Huisman emphasized the importance of setting standards for what an explanation of an algorithm should look like. ‘Authorities often require a deeper understanding of how an algorithm works, including how it makes considerations, what information it looks at, what information is necessary to make a good choice, and how uncertain the algorithm is in its output. Furthermore, for specific instances, humans may ask counterfactual questions to understand why one decision is proposed and not another. By understanding the requirements for human decision-making, we can create more effective explanations that provide a more complete understanding of the algorithm’s decision-making process. Since the user is often responsible for the final decision to be taken, he wants to be sure it is the right one.’`},
+        {p:`To address these challenges, each LTP ROBUST lab will include a researcher with a background in social and behavioral science. The RAIL Lab is a testament to this effort, with one PhD student focusing on the cooperation between human and AI planners. This study will reveal requirements, expectations, and potential pitfalls of human-AI interaction, specifically of interaction with algorithmic planners. These results will be augmented with data science techniques to extract important factors from past decision-making and planning processes, to develop a computational cognitive model of the decision and planning process.`},
+        {p:`Huisman sees a colorful future ahead: ‘NS has its fair share of critics. Some say it is too big, bureaucratic, or slow. On the other hand, I know of few other companies that have invested as much time and resources into innovative projects like railway planning, as NS has in the Netherlands.’ Optimizing rail systems is a complex task that will require many more years of research and a delicate balance between human expertise and advanced AI algorithms. However, Huisman and his colleagues are committed and up for the challenge. ‘With LTP ROBUST and RAIL Lab’s ongoing efforts, we can hope to see more trustworthy, efficient, and seamless rail systems in the near future.’`}
+      ]
+    },
+
+    'interview-nava-tintarev':{
+      type:'article', eyebrow:'Interview',
+      title:`Empowering Marginalized Voices: News Representation and Personalization`,
+      meta:{name:'Nava Tintarev', role:'Full Professor in Explainable AI, Maastricht University', date:'2023'},
+      hero:'data/pages/experience/icai/interviews/nava-tintarev/nava-tintarev.jpeg',
+      back:{label:'ICAI', view:'icai'},
+      standfirst:`Artificial intelligence is becoming increasingly prevalent, which gives rise to the question of how we can ensure that it is trustworthy and ethically sound. The recently announced LTP ROBUST program is taking this challenge head-on by focusing on the principles underlying trustworthy AI and machine learning in order to realize the potential of AI to create social impact in areas such as healthcare, logistics, media, food, and energy. Among the 17 new AI labs being established as part of the program is the TAIM Lab, which is led by researchers Maarten de Rijke and Nava Tintarev.`,
+      bio:`Nava Tintarev is a Full Professor in Explainable AI at Maastricht University and a visiting Professor at TU Delft. She leads and contributes to several projects in the field of human-computer interaction in artificial advice giving systems, such as recommender systems; specifically developing the state-of-the-art for automatically generated explanations (transparency) and explanation interfaces (recourse and control). Additionally, she is a senior member of ACM and a co-lab director of the TAIM lab in the ROBUST program, working on trustworthy media, in collaboration with UvA and RTL.`,
+      blocks:[
+        {q:`In the TAIM Lab, you will optimize AI for diversity and inclusion in the news. Are you excited to start?`},
+        {p:`‘I am thrilled’, Tintarev mentions with a sparkle of excitement. ‘With TAIM Lab, we are taking a bold step towards creating AI technology for media that truly serves the greater good. Our research lab is focused primarily on ensuring the diversity of voices being expressed in the media, but we also aim to ensure fair exposure to high-quality content for different groups of users. Additionally, we work to ensure the accessibility of the news, for example, by automatically generating subtitles for the hearing-impaired.’ Measuring the quality, personalization, and diversity of news content is a significant challenge. Tintarev notes that while they have developed strong evaluation methods as a starting point, they expect to evolve and improve them: ‘Research is a constantly evolving process, and we are dedicated to exploring new ways to improve the evaluation methods of our methods.’`},
+        {p:`Especially in the media, it is essential to strive for balance, accuracy, and inclusivity of AI. Failing to accurately represent marginalized groups or giving disproportionate attention to certain issues or groups can contribute to the perpetuation of harmful prejudices, a lack of societal representation, and a lack of access to resources and opportunities.`},
+        {p:`‘It’s plain and simple; not listening to each other hurts our democracy’, Tintarev notes. ‘Some groups in society may feel that their voices are not being heard, leading to distrust in the government’s ability to represent all citizens. For example, farmers may not trust the government to protect their livelihoods, or some people may disagree with how COVID regulations were implemented. To avoid giving rise to or amplifying such biases with AI, we are committed to incorporating ethical considerations and the perspectives of marginalized groups into the design and development of AI for media. I believe that by utilizing AI to enhance the diversification of news, we can promote and stimulate society to seek out one another and consider diverse perspectives, ultimately leading to increased tolerance and improved decision-making in society.’`},
+        {q:`Too much news diversity can lead to information overload and news disengagement and ultimately discourage them from staying informed. Why would we not cut the middle man, diversification, and optimize for news engagement?`},
+        {p:`‘Actually, I think that optimizing for engagement is a limitation of current social media and recommender systems. Content that is more emotionally provoking gets more clicks, likes, and shares, and is then also more likely to be seen by others. Additionally, users are also more likely to interact with content that is personalized and confirms their prior beliefs. If the primary goal is to keep readers engaged and on the website or platform, there may be less incentive to verify the accuracy of the content or make it adhere to any other notion of relevance. It can lead to a biased portrayal of events, misinformation, and polarization. Healthy debates might be the ones where many people are engaged, but in turn, high engagement does not necessarily indicate that a debate is healthy. Using AI to solely optimize for engagement, I believe, is a mistake.’`},
+        {q:`TAIM lab’s goal is to ensure that news personalization maintains diversity. Are diversity and personalization not somewhat mutually exclusive?`},
+        {p:`‘I think personalization and diversification can co-exist, and finding a balance between them might actually improve the user experience. For example, let us say we are talking about zoos and whether they are a good thing or not. One person might believe that zoos are great because kids can visit them and learn about animals, while another person might believe that zoos are important because they help protect endangered species. Both of these perspectives recognize the value of zoos, and exposing both of these people to the other one’s perspective might incentivize them to start thinking about education and conservation.`},
+        {p:`Additionally, exposing users to news that aligns with their existing beliefs but also presents perspectives on topics they do not agree with can be really beneficial. For instance, during a conversation about reading facial expressions, someone mentioned to me that people on the autism spectrum often have a hard time with this skill and that the covid mask mandates made it even harder for them because they cannot see half of people’s faces. The conversation taught me that the group of people against mask mandates is more nuanced than people generally believe it to be. Similarly to this real-life conversation, I believe that using AI to balance personalization and diversification in the news will lead to a more nuanced and inclusive society.’`},
+        {q:`The TAIM Lab brings together the University of Maastricht, the University of Amsterdam, and RTL. What is the value for society of academic institutes working together with industry partners in a research lab such as TAIM?`},
+        {p:`‘Researchers experience a very, very strong pressure to publish scientific papers, which stimulates us to solve problems that we can solve, rather than the problems we should be solving. The real world is messy, which means that results retrieved from a neatly controlled environment might not always extrapolate. In the LTP ROBUST program, we aim to create with purpose and work on real-world challenges with access to real data. Collaborating with industry partners such as RTL, which already have a platform and data on hundreds of thousands of users, allows us to confront these real-life challenges head-on.’`},
+        {q:`The TAIM Lab will host 5 PhD students who will work on topics such as automated subtitling for TV, full-page personalization for RTL, and Diversity & Bias in AI and content. What are some universal qualities you look for in a PhD student?`},
+        {p:`‘When looking for PhD students to join the TAIM Lab, I prioritize those who possess GRIT (Guts, Resilience, Initiative & Tenacity), or the ability to persevere and accomplish long-term goals. Research in this field is not always straightforward, and it is important to have students who can handle setbacks and continue to work towards their goals. GRIT is important to me, but it does not mean I expect you to work ridiculous hours. I value a healthy work-life balance, as I believe it is important for maintaining one’s mental well-being. I encourage students to prioritize their well-being and not expect them to respond to emails outside of regular work hours. In my experience, a healthy balance between work and leisure is crucial for success in the academic field.’`},
+        {q:`What has been the most rewarding project that you have worked on in the field of explainable AI? Which one made you the happiest?`},
+        {p:`‘One of the most rewarding projects I have worked on in the field of explainable AI was natural language creation for nonverbal children with exceptional needs. These children struggled to inform their carers about their days using methods like sign language or pictures, since these methods have few other options to express themselves than natural language. Our technology was able to gather information on the kids’ interactions and activities and provide narratives in natural language that detailed their interactions with others, the things they played with, and their feelings. One particularly memorable moment was with a child who loved playing pranks. Using our system, he was able to express his sense of humor and enjoy the act of communicating without the struggle of being understood. It was a powerful reminder of the positive impact that technology can have on people’s lives.’`},
+        {q:`Lastly, what advice would you give to someone just starting in the field of Explainable AI?`},
+        {p:`Come work with me on the big open issues! For instance, when multiple explainable AI methods are applied to a single model, there can be a lack of consistency in the explanations generated, resulting in disagreement between the methods. This is referred to as the ‘disagreement problem.’ Come help us solve it! Models tend to be overconfident in their predictions even in cases of high uncertainty. The sources of uncertainty are hard to pinpoint: you might not have all the relevant data to solve the problem, or the problem has high variance. Bring us your creativity! Lastly, an open issue has to do with interactive interfaces. Different people need different model explanations, one size does not fit all. Moreover, given the increased complexity of the information that we need to convey, interactive model explanations might help people explore the model. Come work with me on these open issues!`}
+      ]
+    },
+
+    'interview-chiem-congcong':{
+      type:'article', eyebrow:'Interview',
+      title:`Artificial Intelligence in Agriculture and Weather Forecasting`,
+      meta:{name:'Chiem van Straaten & Congcong Sun', role:'VU/KNMI · WUR', date:'November 1, 2022'},
+      hero:'data/pages/experience/icai/interviews/chiem-congcong/chiem-congcong.jpg',
+      back:{label:'ICAI', view:'icai'},
+      standfirst:`The world is facing a number of converging climate change challenges: population growth, more frequent extreme weather events, and a need for the sustainable production of nutritious food. Machine learning may help us mitigate and prepare for these consequences, but it is no silver bullet. In this conversation, Chiem van Straaten and Congcong Sun discuss the challenges of machine learning in agriculture and weather forecasting, and discover that their fields have more in common than they expected.`,
+      bio:`Chiem van Straaten is a PhD student at the Vrije Universiteit Amsterdam (VU) and the Royal Netherlands Meteorological Institute (KNMI). His research focuses on improving sub-seasonal probabilistic forecasts of European high-impact weather events using machine learning. Congcong Sun is an assistant professor in Learning-based Control at Wageningen University & Research (WUR) and Lab Manager of the ICAI AI for Agro-Food Lab. Her research uses learning-based control to explore the overlap between machine learning and automatic control, applied to agricultural production.`,
+      blocks:[
+        {q:`Congcong and Chiem, what is your research about, and where does artificial intelligence come in?`},
+        {speaker:`Congcong`, p:`My focus is learning-based autonomous control in agricultural production. In a greenhouse or vertical farm, for instance, climate control can be optimized so that crops grow under more favorable conditions and produce better quality. Another example is logistical planning for agro workers, such as harvesting robots in a multi-agent setting. These control applications are complex, which is why I mainly use deep reinforcement learning: reinforcement learning algorithms combined with neural networks.`},
+        {speaker:`Chiem`, p:`I study and predict weather and climate extremes. Many industries, agriculture among them, depend on accurate forecasts. Understanding our climate better is crucial for preparing for extreme weather, and it allows industries to use their resources more efficiently. But predicting weather events far in advance is extremely tough: there are time lags, observed patterns are highly conditional, and countless factors influence one another. Machine learning has the potential to deal with that level of complexity.`},
+        {q:`Do you see similarities between your fields?`},
+        {speaker:`Congcong`, p:`They are interconnected, certainly. Weather is a large source of uncertainty in agriculture, particularly for farms in uncontrolled environments such as open-air farms. But weather is not the only source; uncertainty also arises from the crops themselves. Every crop has its own optimal growing conditions, so a control policy that works for one crop might fail for another, even in the very same greenhouse.`},
+        {speaker:`Chiem`, p:`So you are tackling something inherently multivariate, which is exactly what weather forecasting looks like. I am not well-versed in agriculture, but I imagine you juggle many factors at once: irrigation, lighting, temperature?`},
+        {speaker:`Congcong`, p:`Those and more: humidity, fertilization, light, temperature. Analyzing the relationships between these variables requires knowledge from disciplines like plant physiology and biology, and some relationships may simply not have been discovered yet. That is where the combination of machine learning and automatic control can help, exploring these unknown relationships and translating them into knowledge about how to regulate these environments.`},
+        {speaker:`Chiem`, p:`That mirrors weather prediction closely. For decades, physical numerical models have been built to incorporate as many known processes as possible. But the weather is so complex that these models are never perfect. So we attempt to replace parts of the numerical models with statistical models, precisely to capture yet-to-be-discovered processes.`},
+        {speaker:`Congcong`, p:`What kind of data goes into those forecasts?`},
+        {speaker:`Chiem`, p:`In the non-statistical models, a plethora of variables: humidity, pressure, air temperature, wind speed. And like the input, the output is multivariate, another parallel with learning-based agriculture control. There may be a third one, too: cycles. I imagine you have to account for growing cycles, which differ per plant. In weather forecasting we deal with many cycles simultaneously: seasonal, weekly, daily.`},
+        {speaker:`Congcong`, p:`That is true. Plants have different optimal growing cycles, and in a greenhouse with multiple plants those cycles can overlap, much like your weather cycles do. There are more similarities between our domains than I expected.`},
+        {q:`One challenge we often hear about is trustworthiness, especially in applications with high uncertainty. Are companies in your industries enthusiastic or reluctant to adopt machine learning?`},
+        {speaker:`Congcong`, p:`Greenhouse climate control is quite mature in the Netherlands, and some commercial greenhouses already run automated control. But we are still not making use of all available cutting-edge sensing techniques. Adoption can be slow: the techniques are expensive, and if they fail, it could ruin a farmer’s business. Farmers may also simply hesitate to trust machine learning, since it is relatively new.`},
+        {speaker:`Chiem`, p:`Trustworthiness really is crucial for acceptance. Applications such as heatwave prediction are not ready for widespread use, because heat waves must be predicted far in advance, which is immensely hard to do accurately. Short-term applications like rainfall forecasting, on the other hand, have a track record of success. Weather forecasting also has rapid update cycles: if today’s forecast is wrong, tomorrow you get another chance, with greater accuracy. For heatwave prediction, an errant forecast has far more severe consequences, and I imagine the same holds in agriculture.`},
+        {speaker:`Congcong`, p:`It does. Plants are sensitive, so if a wrong prediction creates conditions the plants cannot survive, the grower might lose everything. System control in agriculture does not put humans directly at risk, as in autonomous driving, but margins on crops are small. That makes growers generally more averse to machine learning and statistical approaches.`},
+        {q:`Chiem, you work on heatwave prediction. What is the largest hurdle in this research?`},
+        {speaker:`Chiem`, p:`The interaction between processes across different scales. Locally, heat can be exacerbated by dry soil or particular atmospheric configurations. But local conditions can also be synchronized across the entire northern hemisphere; very specific conditions hundreds of kilometers away might signal an impending heatwave. Add global connections and it becomes more complex still.`},
+        {p:`These cross-scale interactions make it hard to determine what data resolution you need and which algorithm is most suitable. On top of that, climate change is actively shifting our data distributions as we speak. Past data may reflect different weather dynamics than today’s, which makes generalizing very difficult. To an extent, your machine learning model is always extrapolating.`},
+        {q:`To round off: when would you call your research a success?`},
+        {speaker:`Congcong`, p:`Any progress counts as success for me: my PhD students achieving a small step forward, solving pressing challenges for farmers, making food production more sustainable by reducing emissions and energy use.`},
+        {speaker:`Chiem`, p:`A large success would be answering questions of climate change attribution: how much has climate change exacerbated the impact of a specific extreme weather event, or made it more frequent? Confident answers to such questions would allow us to hold parties like big emitters accountable. That is still far off, but I believe machine learning can give us the tools to get there.`}
+      ]
+    },
+
+    'interview-keelin-phillip':{
+      type:'article', eyebrow:'Interview',
+      title:`Using Artificial Intelligence to Enable Low-Cost Medical Imaging`,
+      meta:{name:'Keelin Murphy & Phillip Lippe', role:'Radboudumc · QUVA Lab, UvA', date:'October 3, 2022'},
+      hero:'data/pages/experience/icai/interviews/keelin-phillip/keelin-phillip.jpg',
+      back:{label:'ICAI', view:'icai'},
+      standfirst:`Medical imaging is a cornerstone of medicine for the diagnosis of disease, treatment selection, and quantification of treatment effects. Now, with the help of deep learning, researchers and engineers strive to enable the widespread use of low-cost medical imaging devices that automatically interpret medical images. This allows low and middle-income countries to meet their clinical demand and radiologists to reduce diagnostic time. In this interview, Phillip Lippe, a PhD student at the QUVA Lab, interviewed Keelin Murphy, a researcher at the Thira Lab, to learn more about the lab’s research and the development of the BabyChecker project.`,
+      bio:`Keelin Murphy is an Assistant Professor at the Diagnostic Image Analysis Group in Radboud University Medical Center. Her research interests are in AI for low-cost imaging modalities with a focus on applications for low and middle-income countries. This includes chest X-ray applications for the detection of tuberculosis and other abnormalities, as well as ultrasound AI for applications including prenatal screening. Phillip Lippe is a PhD student in the QUVA Lab at the University of Amsterdam and part of the ELLIS PhD program in cooperation with Qualcomm. His research focuses on the intersection of causality and machine learning, particularly causal representation learning and temporal data. Before starting his PhD, he completed his Master’s degree in Artificial Intelligence at the University of Amsterdam.`,
+      blocks:[
+        {q:`You witnessed the transition to deep learning. What does it have to offer medical image analysis?`},
+        {p:`I believe deep learning has a huge role to play in medical image analysis. Firstly, radiology equipment is expensive and requires the training of dedicated physicians, which means that low and middle-income countries can not meet their clinical radiology demands. Using deep learning-powered image analysis, therefore, has the potential to homogenize medical imaging accessibility around the world.`},
+        {p:`Secondly, even in richer countries such as the Netherlands, we can use deep learning to reduce the costs of radiology clinics. Every minute a radiologist spends looking at an X-ray, for example, is expensive, and radiologists have to review a lot of X-rays every day. While every X-ray still requires the radiologists’ utmost attention, many of these X-rays actually show no signs of malicious threat. Deep learning could be used here to prioritize radiologists’ work list, by putting cases that seem normal at the bottom and cases that are deemed urgent at the top of the list. When artificial intelligence can really be relied upon, we could even start removing items from the radiologists’ workflow entirely.`},
+        {q:`Which architectures do you use in practice, mostly CNNs for classification and segmentation, or do you go beyond that?`},
+        {p:`We almost always use a CNN, where the type of CNN is dependent on the application. More often than not, due to the confidential nature of medical data, the most important factor in determining which model to use is actually the amount of data that is available. Using too little data to train a model runs the risk of overfitting and introducing lots of uncertainty. Therefore, we have to try to use models cleverly to make sure to overcome such consequences by using class balancing, data augmentation, or adjusting the network architecture. Other factors include the size of the model. For instance, to enable global use of the BabyChecker, it is important that the model can fit on a mobile phone device, which sets requirements for the size of the network we can use.`},
+        {q:`A model might say a measurement looks fine when that person actually needs hospital care. How do you deal with this uncertainty?`},
+        {p:`First, we should acknowledge that uncertainty is inevitable. Radiologists make mistakes, just like models can make mistakes. Only through strict quality control processes can we ensure that these models are reliable enough so that they do more good than harm. Especially in the medical field, this poses many challenges. For instance, on the technical side, we should figure out how to deal with domain shifts. On the legal side, we should determine who is responsible if the model makes a mistake and what legal actions can be taken. Those things are incredibly unclear at the moment.`},
+        {p:`Right now, I still see that artificial intelligence has a big role to play as a suggestive assistant to a radiologist if one is present, or as a screening tool when one is not. For instance, in Africa, tuberculosis is very prevalent, but most often, there is no physician available. One of the products developed in our group and now scaled by Delft Imaging is able to detect tuberculosis-related abnormalities in inexpensive chest x-rays and refer patients for a more accurate and expensive microbiological test when necessary. While this product is not flawless, it does allow us to help more people than we could have otherwise. So until we reach the stage that systems are sufficiently quality-controlled, using deep learning for screening and suggestions can be really useful.`},
+        {q:`Another known problem is that neural networks tend to be overconfident. Are there ways to address this problem?`},
+        {p:`Yes, I have not yet mentioned it to you before, but this is actually really important for getting artificial intelligence accepted in the clinical workflow. Sometimes it might happen that an image of noise accidentally makes its way into the database due to a malfunctioning scanner. If the system still gives you a score for emphysema, then you lose faith in that system. In such cases, we want the system to output that the image is very different than the images it was trained on and that the model cannot classify that image. It would be even better if the system provides an interpretable explanation for why it made a certain prediction, since transparency in the prediction process is crucial for clinicians to be able to trust the system.`},
+        {q:`Interpretability methods are popular but contested. Have you tried them, or are they still too noisy?`},
+        {p:`While interpretability methods work well in theory, for me, the field is still too under-researched to have practical value. One popular method for explaining predictions in the medical field is by producing heat maps based on the weights of the network. However, such methods are hard to quantify and look prettier than they actually are.`},
+        {q:`When clinicians hear about these limitations, are they reluctant to participate in AI research?`},
+        {p:`My experience is really positive, but I work mainly with doctors who are interested in what artificial intelligence has to offer. I believe that clinicians recognize that AI is coming to their field, and they either have to get on board or they are going to be left behind. As I mentioned before, though, the technology in most cases is not ready to be left unattended. Therefore, use cases that researchers and clinicians prefer right now often assume a suggestive/assistant role for the AI algorithm or a screening role in scenarios where no trained reader is available.`},
+        {q:`How important are collaborations with hospitals and medical companies for data access?`},
+        {p:`Collaboration with your partners is super important in lots of ways. I believe that researchers should never try to develop medical image analysis solutions if they are not collaborating with clinicians. First off, to do research, you are dependent on the availability and the quality of data that is gathered. If we want to move the field forward, we should communicate about the following topics more: which data can be used for what research purpose; how the data should be gathered so that the quality is the highest; and how we can get consent from patients to use their data more often than we do now.`},
+        {p:`Secondly, there is some knowledge sharing involved. Sometimes I read a paper that had no clinical input, and you can really see the difference. Either the researchers made mistakes that could have been prevented, or you can see that the research does not have practical value.`},
+        {q:`Is patient consent the biggest hurdle to a medical ImageNet?`},
+        {p:`The problem is that patients are not asked often enough if their data can be used for commercial purposes. Even so, when they are asked, patients might be reluctant to share such private data without being aware of how and by whom it is used. While everybody working in the field of artificial intelligence knows that data is the cornerstone of everything, we should think about how we can communicate this effectively to the community. For instance, by providing more education to create public awareness of what AI is and why large amounts of data are necessary to create successful solutions.`},
+        {p:`Still, some challenges need to be addressed. For instance, do patients feel comfortable sharing their data with all companies, or do they prefer to share their data selectively? What does it mean for competition if all companies have access to the same data? These are questions that we need to find an answer to, together with the community. Moreover, we should also make sure that the data is completely de-identifiable, so that the person the image is taken of can never be traced back to that image.`},
+        {q:`What is the research focus of the Thira lab?`},
+        {p:`Our research focuses on two things: the scalability of existing methods in the medical domain, and the reliability of the new methods we are developing to make predictions. Whatever research we do, I would say the red line is always the clinical applicability of our solutions rather than developing pure theoretical knowledge.`},
+        {q:`Is the BabyChecker trained only on data from the device itself, or is domain adaptation involved?`},
+        {p:`In general, in the minimum viable product stage, we only use data acquired with the actual device, so no domain adaptation is necessary. At this early stage, BabyChecker’s software works with a selected ultrasound probe so that early adopters in our projects can gain easy access to BabyChecker. Over 70 operators who have been trained to use BabyChecker are scanning pregnant women in Tanzania, Ghana, Sierra Leone, Ethiopia, and soon Uganda as well. The data comes back to our partner Delft Imaging, where experts keep a close check on how well the software is working and where physicians determine the quality of the data. This way, we make sure that the system is rigorous and that patients get the correct care.`},
+        {q:`You have already mentioned some future improvements to the BabyChecker. Where do you want to be in four years?`},
+        {p:`At the moment, the BabyChecker checks a few things: 1) The gestational age of the baby to determine the estimated due date, 2) The position of the baby so that when the baby is in a breech position, the woman can make sure to deliver the baby in a hospital, and 3) The presence of twins since this is also a high-risk pregnancy where the woman should go to the hospital to deliver. Additionally, we are looking to perform placenta localization and detect the fetal heartbeat to discover possible pregnancy complications.`},
+        {q:`Looking four years ahead, where does AI most need to improve in the medical domain?`},
+        {p:`In general, I would like to see how we can use low-cost X-rays and ultrasounds for lots of other diagnoses. For example, heart failure or lung disease. However, in order for such applications to be feasible, we need AI methods that can work well with small amounts of training data. I think that is really the biggest challenge that we have to overcome.`},
+        {q:`When would you consider your research successful?`},
+        {p:`While I believe I will never feel like there is nothing to improve, I would say my research is successful if we can reliably screen large numbers of people in low-resource settings for all sorts of illnesses and possible complications and get them referred for the treatment they need.`}
+      ]
+    },
+    tembo:{
+      eyebrow:'Experience', name:'Tembo Group', role:'Design Science Intern', type:'Full-time',
+      period:'May 2021 – Aug 2021 · 4 mos', location:'Kampen, Overijssel, Netherlands · On-site',
+      logo:{color:'#e67e22', initials:'TE', img:'data/icons/tembo.jpeg', fill:true},
+      body:['Investigated the quality trade-offs of federated learning for industrial machinery manufacturing companies.'],
+      bullets:[
+        'Conducted a systematic literature review to map the non-functional requirements of federated learning',
+        'Designed a framework to help navigate quality requirements of federated learning (privacy, communication efficiency, etc.) and their competing relationships',
+        'Engaged stakeholders across the company, from the data team to the leadership team, running individual workshops on machine learning and federated learning to prepare them to assess the framework',
+        'Evaluated the framework through a case study using the Unified Theory of Acceptance and Use of Technology (UTAUT) model'
+      ]
+    },
+    'project-tembo':{
+      eyebrow:'Project', name:'Mapping the trade-offs of federated learning',
+      back:{label:'Projects', scroll:'projects'},
+      writeup:{
+        sections:[
+          {head:'Problem', body:[
+            `Pooling data across organisations improves machine-learning models, but shipping everyone's raw data to one central server runs into privacy, security and ownership problems. Federated learning keeps each party's data local and shares only model updates. The catch is that the qualities a business cares about (privacy, efficiency, security, performance) pull against each other, so a fix for one quietly costs another. My thesis at Tembo set out to give a non-expert an approachable way to explore that landscape.`
+          ]},
+          {head:'Federated learning', img:'data/pages/experience/tembo/federated-learning.svg', figW:480, imgNum:1, imgCap:'In federated learning, raw data stays on each client. Only model updates travel to a central server, which aggregates them and sends a global model back.', imgAlt:'Diagram of federated learning: clients train local models on their private datasets and exchange model updates with a central server that aggregates them.', body:[
+            `Federated learning is straightforward in principle; a coordinating server distributes a shared model to each participant; every client performs a round of local training on its own data (often just a single step, a few steps, or one epoch) and returns only the resulting parameter updates, which the server aggregates into an improved global model before the next round. Because the raw data never leaves its owner, organisations can train on their combined knowledge without exposing the underlying records. I scoped the work to Horizontal Federated Learning, the most extensively researched and widely deployed variant, in which participants share the same feature space but hold different samples. For instance, several factories running the same product-inspection setup on their own production lines can each train a shared defect-detection model on their local images without sharing them, while the collaboration lets every plant benefit from defect examples no single factory could gather on its own.`
+          ]},
+          {head:'The review', img:'data/pages/experience/tembo/prisma.png', figW:540, imgNum:2, imgCap:'Source selection for the systematic review of reviews.', imgAlt:'PRISMA flow diagram showing identification, screening, and eligibility stages narrowing the search down to a final selection of ten reviews.', body:[
+            `Rather than read every primary paper in a fast-moving field, I ran a systematic literature review of reviews, pairing the rigour of a systematic protocol with a survey-of-surveys approach. The logic was practical: federated learning was moving so quickly that several very recent reviews already existed, a full primary review wasn't feasible in a bachelor's timeframe, and synthesising the surveys let me stand on the shoulders of giants while a fixed protocol kept researcher bias and cherry-picking in check.`,
+            `The initial search returned 174 papers; removing duplicates, anything published before 2016 (when Google coined the term), non-English work and titles the university licence couldn't reach left 66 for title screening, then 22 for abstract screening, then 9, plus one more found by forward-and-backward snowballing, for a final set of ten reviews. Each survivor was quality-assessed in three stages: citation counts as a proxy for peer regard, six structured quality-assessment questions, and a pairwise check of how much the reviews' reference lists overlapped, to make sure the whole field wasn't just re-citing one narrow corpus.`,
+            `From the ten I then extracted three things: the non-functional requirements they named, the solution directions proposed for each, and, most importantly, the interdependencies between them. Only a few requirements dominate, with privacy, performance and efficiency appearing in all ten reviews while a long tail showed up only once or twice. It was these tangled interdependencies, more than any single requirement, that made a flat checklist inadequate and pointed towards a map.`
+          ]},
+          {head:'The model', body:[
+            `I turned all of that into a single artefact, structured loosely like a non-functional-requirement framework: a map of quality attributes, the solution directions that target each, and the positive and negative links between them. The important design choice was to treat it as a map, not a navigation system: it is meant to let a business explore “if I want privacy, what are my options, and what will each one cost me elsewhere?”, not to spit out a recommendation it can lean on without further research. That distinction matters in a field where best practices shift within a year. I evaluated the model at Tembo through a workshop and a UTAUT acceptance questionnaire.`,
+            {html:`<div><p style="margin:18px 0 8px;font-size:14.5px;line-height:1.7;color:var(--ink)"><strong>Explore the map.</strong> Solution techniques run down the side, quality attributes across the top, grouped by category. Each cell is green where a technique helps an attribute and red where it trades off against it; an orange cell marks a link to a whole category rather than a single sub-attribute, which happens because a source sometimes names the category in general (say, confidentiality) without pinning down which specific aspect of it is affected (the + or − inside still shows help or trade-off). Reading down a single column gives that attribute's full set of options and costs. Hover a cell for the relationship in words and click a coloured cell to open the papers it is based on, or click a row or column label to focus just that one.</p><div style="position:relative;left:50%;transform:translateX(-50%);width:min(885px,94vw);container-type:inline-size;margin:0 0 8px"><div style="width:100%;aspect-ratio:885/830;overflow:hidden"><iframe src="data/pages/experience/tembo/nfr-matrix.html?v=42" title="Federated-learning NFR trade-off matrix" loading="lazy" scrolling="no" style="width:885px;height:830px;border:0;display:block;overflow:hidden;transform-origin:top left;transform:scale(calc(100cqw / 885px))"></iframe></div></div></div>`},
+            {html:`<em>Based on my BSc Honours thesis, “Non-functional Requirements, Solutions and Interdependencies in Federated Learning” (University of Twente, in collaboration with Tembo, 2021).</em>`}
+          ]}
+        ]
+      }
+    },
+    perron038:{
+      eyebrow:'Experience', name:'Perron038', role:'Machine Learning Intern', type:'Full-time',
+      period:'Feb 2021 – May 2021 · 4 mos', location:'Zwolle, Overijssel, Netherlands',
+      logo:{color:'#16a085', initials:'P38', img:'data/icons/perron038.jpeg'}, accent:'#1a1a1a',
+      body:['Researched a non-destructive way to detect leakage inside sealed, opaque detergent-pod containers, where a broken pod can leak fluid that is impossible to spot from the outside. As part of the PRISMA project with Tembo, I explored active thermography: briefly heating each container so that leaked fluid and the surrounding plastic settle at slightly different temperatures, which an infrared camera can then pick up.'],
+      bullets:[
+        'Co-designed a semi-automated capture setup, pairing a collaborative robot for pick-and-place with a ceramic heater and an infrared thermal camera that imaged each container immediately after heating. The cobot heated every box in exactly the same way, key to collecting a consistent dataset.',
+        'Tuned the heating process, comparing different heaters and sweeping heating time and camera distance to characterise how they raise leakage contrast while lowering container homogeneity, then fixing the setup that best separated the two classes.',
+        'Collected and labelled a thermal image dataset of roughly 1,000 samples. Despite the automated capture, it was labour-intensive: every box was manually prepared with a graded amount of leakage (low, moderate, or heavy), shaken to vary pod positions, and cleaned for reuse between rounds.',
+        {html:'The resulting dataset contributed towards Akash Ravi Prame\'s <a class="inline-link" href="https://purl.utwente.nl/essays/88563" target="_blank" rel="noopener">MSc thesis on hybrid learning for leakage detection<span class="inline-arr">↗</span></a>.'}
+      ]
+    },
+    'project-perron038':{
+      eyebrow:'Project', name:'How do you tell whether a sealed box of detergent pods contains a leaking pod, without opening it?',
+      back:{label:'Projects', scroll:'projects'},
+      writeup:{
+        sections:[
+          {head:'Problem', img:'data/pages/experience/perron038/boxes.png', figW:630, imgAfter:0, imgNum:1, imgCap:'Two containers seen from the top, one holding pods and one without, showing what leakage looks like.', imgAlt:'Two detergent-pod containers viewed from above, one with pods and one without', body:[
+            'Manufacturers of detergent pods want to guarantee that no box leaves the factory with a broken pod inside. The catch is that recent EU regulations require these containers to be opaque (so they look less appealing to children), which makes visual inspection after packaging impossible. Manually opening every box to check it does not scale on a production line, so the goal was to create a prototype to automate the inspection with a non-destructive method that could effectively look through the plastic.'
+          ]},
+          {head:'Active thermography', figsAfter:1, figs:[
+            {img:'data/pages/experience/perron038/setup.jpg', num:2, alt:'The semi-automated capture setup: an Omron collaborative robot, the heating enclosure, and a laptop showing a thermal image', title:'The capture setup.'},
+            {img:'data/pages/experience/perron038/schematic.svg', num:3, alt:'Schematic of the capture setup', title:'Schematic of the capture setup.'}
+          ], body:[
+            'Our approach exploited a small physical difference: leaked detergent fluid and the plastic of the container heat up and cool down at different rates. If you briefly warm the bottom of a box, where any leaked fluid eventually pools, the fluid and the surrounding material settle at slightly different temperatures. An infrared camera can pick up that difference, even though the human eye sees nothing but a red plastic box.',
+            'To capture this at scale, we co-designed a semi-automated setup: a collaborative robot picked each container off a conveyor, held it over a ceramic heater for a fixed time, and then presented it to an infrared thermal camera that imaged the bottom immediately after heating.'
+          ]},
+          {head:'Tuning', figsAfter:0, figs:[
+            {img:'data/pages/experience/perron038/contrast.png', num:4, alt:'Line chart of temperature span versus heating time for camera distances of 25 to 50 cm', title:'Contrast (temperature span between leakage and container) versus heating time, for camera distances of 25 to 50 cm. Longer and closer heating raises contrast.'},
+            {img:'data/pages/experience/perron038/standard_deviation.png', num:5, alt:'Line chart of standard deviation versus heating time for camera distances of 25 to 50 cm', title:'Standard deviation of container temperature versus heating time, for the same distances. A higher value means a less homogeneous container.'}
+          ], body:[
+            'Thermal images are only as good as the heating process behind them, so a large part of my work was characterising that process. I compared different heaters and systematically swept the two main control variables, heating time and the distance between heater and container, to see how they affected the images. The pattern that emerged was a trade-off: longer and closer heating increased the contrast between leakage and container, but it also made the container itself heat up less evenly. The goal was to maximise leakage contrast without sacrificing too much homogeneity, and the final capture settings were fixed based on which combination best separated the two classes.'
+          ]},
+          {head:'Capture', figsAfter:0, figs:[
+            {img:'data/pages/experience/perron038/dataset.jpg', num:6, alt:'Rows of numbered detergent containers making up the labelled dataset', title:'The labelled dataset of numbered detergent containers, reused across leakage configurations.'},
+            {img:'data/pages/experience/perron038/heat.jpg', num:7, alt:'A container being heated by the ceramic heater inside the setup', title:'A container being heated by the ceramic heater inside the setup.'},
+            {img:'data/pages/experience/perron038/capture.jpg', num:8, alt:'A container positioned over the infrared camera to be imaged', title:'A container positioned over the infrared camera, imaged immediately after heating.'}
+          ], body:[
+            'Supervised learning needs lots of labelled examples, but we only had a limited supply of containers. We stretched them as far as they would go: containers were split evenly between leaking and non-leaking, leakage was created in three graded amounts (low, moderate, heavy, with real leaks ranging roughly from 5 to 25 ml), and every box was imaged multiple times after shaking it to vary the pod positions inside. Between rounds, the bottoms were cleaned thoroughly so the same boxes could be reused for new leakage configurations. Each image was labelled with its full capture settings and box number. I explored preprocessing techniques to make leakage easier to detect, most notably mean image subtraction: computing the average image over the dataset and subtracting it from each frame, so that regions deviating from the norm, the leakage, stand out.'
+          ]},
+          {head:'Outcome', figsAfter:0, figs:[
+            {img:'data/pages/experience/perron038/leakage-1.png', num:9, alt:'Thermal image of a container with no leakage', title:'Thermal image of a container with no leakage.'},
+            {img:'data/pages/experience/perron038/leakage-2.png', num:10, alt:'Thermal image of a container with mild leakage', title:'Thermal image of a container with mild leakage.'},
+            {img:'data/pages/experience/perron038/leakage-3.png', num:11, alt:'Thermal image of a container with heavy leakage', title:'Thermal image of a container with heavy leakage.'}
+          ], body:[
+            {html:'The resulting dataset of ~1,000 balanced thermal images became the foundation of Akash Ravi Prame\'s <a class="inline-link" href="https://purl.utwente.nl/essays/88563" target="_blank" rel="noopener">MSc thesis on hybrid learning for leakage detection<span class="inline-arr">↗</span></a>, which compared handcrafted features, CNNs, and hybrid fusion models. The best hybrid model reached an accuracy of 95.6%, a strong proof of concept that a heater, an infrared camera, and a well-built dataset can detect leakages inside a sealed, opaque container.'}
+          ]}
+        ]
+      }
+    },
+    lidl:{
+      eyebrow:'Experience', name:'LIDL Netherlands', role:'Customer Service Representative', type:'Part-time',
+      period:'Jul 2018 – Mar 2019 · 9 mos', location:'Huizen, Noord Holland, Netherlands · On-site',
+      logo:{color:'#0050aa', initials:'LDL', img:'data/icons/lidl.jpeg', fill:true},
+      body:['Handled 100+ customer requests a day by phone and email, resolving complaints and service issues at LIDL NL Headquarters.']
+    },
+
+    /* ----- EDUCATION ----- */
+    'uva-msc':{ eyebrow:'Education', name:'University of Amsterdam', role:'MSc Artificial Intelligence', period:'Sep 2021 – Aug 2024', location:'Amsterdam, Noord Holland, Netherlands',
+      logo:{color:'#000', initials:'UvA', img:'data/icons/uva.jpeg', fill:true}, accent:'#1a1a1a',
+      body:['My master’s focused on deep learning for computer vision, the direction I now work in as a research engineer at the Max Planck Institute. Alongside the coursework I took part in the ML Reproducibility Challenge and graduated with a thesis on generative video models.'],
+      stats:[
+        {value:'3.8', label:'GPA · avg 7.63/10'},
+        {value:'Synthesizing Object Dynamics from Human Motion with a Video Generative Prior', label:'Master thesis · graded 8/10', small:true, href:'data/pages/education/universiteit_amsterdam/AkkermanRick_MasterThesis.pdf', download:true}
+      ],
+      /* course list hidden — preserved for later
+      courses:[
+        'Deep Learning I', 'Natural Language Processing I', 'Knowledge Representation and Reasoning',
+        'Information Retrieval I', 'Deep Learning II', 'Interpretability & Explainability in AI',
+        'Computer Vision II', 'Reinforcement Learning', 'Machine Learning I', 'Agent-based Modelling'
+      ] */ },
+    'ut-bsc':{ eyebrow:'Education', name:'University of Twente', role:'BSc Technology, Liberal Arts & Sciences', period:'2018 – 2021', location:'Enschede, Overijssel, Netherlands',
+      logo:{color:'#0d2d5c', initials:'UT', img:'data/icons/ut.jpeg', fill:true}, accent:'#1a1a1a',
+      body:['Technology, Liberal Arts & Sciences is Twente’s broad, interdisciplinary engineering degree, in which students design their own track across the sciences. I focused mine on data science and machine learning, and broadened it with a minor in AI at the University of Amsterdam and the Processes of Change honours programme.'],
+      stats:[
+        {value:'4.0', label:'GPA'},
+        {value:'Non-functional Requirements, Solutions and Interdependencies in Cross-Silo Horizontal Federated Learning', label:'Bachelor thesis', wrap:true}
+      ],
+      writeup:{
+        sections:[
+          {head:'Honours Programme', body:[
+            'Alongside my degree I completed the University of Twente’s Bachelor Honours programme, an extracurricular track that runs for a year and a half on top of the regular curriculum. I followed the Processes of Change track, which looks at how change takes shape at the societal, organizational and individual level and at what it takes to lead it. Through small classes, self-assessments and challenge-based learning, it built practical skills in high-impact presenting, independent thinking and collaboration, and culminated in an individual Change Project that I presented at a student-organized seminar.'
+          ]},
+          {head:'DroneTeam Twente', img:'data/pages/education/universiteit_twente/ut-uas.jpg', figW:360, imgAlt:'Four students in matching hoodies holding a 5,000 euro UAS Challenge cheque', body:[
+            'Outside the curriculum I was also briefly part of DroneTeam Twente, the first competitive student drone team in the Netherlands, a multidisciplinary group that designs and builds autonomous drones for humanitarian aid delivery. The team competed in the UAS Challenge, a design-build-fly competition run by the UK’s Institution of Mechanical Engineers, where student teams from around the world build an unmanned aerial system and fly it through a simulated humanitarian rescue mission at a final fly-off in England. My role was on the funding side: I secured a 5,000 euro cheque from the Grolsch Vakmanschap is Meesterschap Fonds, a regional fund the brewery runs to support craftsmanship and innovation in Twente, which helped finance the team’s participation.'
+          ]}
+        ]
+      },
+      },
+    huizermaat:{ eyebrow:'Education', name:'Huizermaat', role:'VWO', period:'Sep 2012 – Jun 2018', location:'Huizen, Noord Holland, Netherlands',
+      logo:{color:'#4a7c59', initials:'HM', img:'data/icons/huizermaat.jpeg'},
+      writeup:{
+        sections:[
+          {head:'Debating Team', figsEven:true, figs:[
+            {img:'data/pages/education/huizermaat/huizermaat1.jpg', alt:'Rick Akkerman with the Huizermaat debating team'},
+            {img:'data/pages/education/huizermaat/huizermaat2.jpg', alt:'The Huizermaat debating team'}
+          ], body:[
+            'During my time at Huizermaat I was part of the school’s debating team.'
+          ]},
+          {head:'U-Talent Academy', body:[
+            'Alongside my VWO at Huizermaat, I took part in the Pre-University Honours Program at Utrecht University’s U-Talent Academy (2016 – 2018). Two-year science and maths honours programme for VWO students. The program includes an independent research thesis under university supervision, plus specialised modules.'
+          ]}
+        ]
+      } },
+
+    /* ----- VOLUNTEERING ----- */
+    'if-fellows':{ eyebrow:'Volunteering', name:'University of Twente Innovation Fellows', role:'Fellow', type:'Education', period:'Oct 2019 – Mar 2024 · 4 yrs 6 mos', location:'Enschede, Overijssel, Netherlands',
+      logo:{color:'#00a6d6', initials:'IF', img:'data/icons/uif.jpeg'},
+      roles:[
+        {title:'Coordinating Team', period:'Sep 2020 – Aug 2022', desc:'Served as External Affairs Coordinator on the three-person team leading the initiative, overseeing its relations with the wider Twente region.'},
+        {title:'UI Guide', period:'Jun 2020 – Feb 2022', desc:'Mentored new University Innovation Fellows cohorts through their Stanford-based Design Thinking training, guiding the 2020 Hamburg University of Technology and 2021 Erasmus University Rotterdam groups.'},
+        {title:'Organiser of Twente-4 Hours Meetup', period:'Jan 2020 – Aug 2020', desc:'Organised and hosted Twente-4 Hours, a 24-hour workshop event streamed to YouTube, running the logistics, website, and speaker relations for sessions led by KLM, Strategyzer, ECIU, Stanford University, and FH Salzburg.'},
+        {title:'Reshaping the Campus App', period:'Nov 2019 – Jul 2020', desc:'Led a 400+ student survey to pinpoint pain points in the university’s digital ecosystem, then advised the campus app’s team on the findings.'}
+      ],
+      press:[
+        {title:'UT students organize a 24-hour event: Twente 4 Hours Global', source:'U-Today', img:'data/pages/volunteering/uif/features/uif1.jpg', href:'https://www.utoday.nl/news/68631/ut-students-organize-a-24-hour-event-twente-4-hours-global'},
+        {title:'“We know we can’t solve the whole problem in one go, but we are convinced that we have a genuine contribution to make”', source:'University of Twente · 2020', img:'data/pages/volunteering/uif/features/uif2.jpg', href:'https://www.utwente.nl/en/news/2020/4/586013/we-know-we-cant-solve-the-whole-problem-in-one-go-but-we-are-convinced-that-we-have-a-genuine-contribution-to-make'},
+        {title:'UT puts more emphasis on University Innovation Fellows', source:'U-Today', img:'data/pages/volunteering/uif/features/uif3.jpg', href:'https://www.utoday.nl/news/67794/ut-puts-more-emphasis-on-university-innovation-fellows'}
+      ] },
+    'dih-hero':{ eyebrow:'Volunteering', name:'DIH-HERO', role:'Grants and Contracts Support Officer', type:'Science and Technology', period:'Feb 2021 – Aug 2021 · 7 mos', location:'Enschede, Overijssel, Netherlands',
+      logo:{color:'#c0392b', initials:'DH', img:'data/icons/dih_hero.jpeg'},
+      body:[`I supported the University of Twente's coordination of DIH-HERO, a €16M Horizon 2020 Innovation Action building a pan-European network of Digital Innovation Hubs in healthcare robotics across a 17-partner consortium. I contributed to the project's communications, events, and operations as it connected SMEs, healthcare providers, and research institutes and distributed over €8M in innovation funding.`] },
+    'autumn-challenge':{ eyebrow:'Volunteering', name:'Autumn Challenge', role:'Coach', type:'Education', period:'Aug 2020 – Jan 2021 · 6 mos',
+      logo:{color:'#d4791f', initials:'AC', img:'data/icons/autumn_challenge.jpeg'},
+      body:['I advised an interdisciplinary team of students from the Netherlands, Italy, and Sweden as they developed an innovative concept report for a Care Hotel.'] },
+    bramzijgers:{ eyebrow:'Volunteering', name:'Stichting Huizer Botters', role:'Secretary, De Bramzijgers', type:'Arts and Culture', period:'Jan 2017 – Aug 2018 · 1 yr 8 mos', location:'Huizen, Noord Holland, Netherlands',
+      logo:{color:'#2c5f8a', initials:'BR', img:'data/icons/bramzijgers.jpeg'},
+      body:[`Co-established the youth wing of the Stichting Huizer Botters, "Bramzijgers", to facilitate the transfer of traditional botter craftsmanship. Helped engage a new generation of young members in preserving Huizen's maritime heritage.`],
+      gallery:[
+        {type:'image', src:'data/pages/volunteering/bramzijgers/bramzijgers1.jpg', alt:'Bramzijgers, preserving Huizen maritime heritage', href:'https://www.instagram.com/huizerbramzijgers/p/Bb7smwcAE6_/'},
+        {type:'image', src:'data/pages/volunteering/bramzijgers/bramzijgers2.jpg', alt:'Bramzijgers, traditional botter craftsmanship', href:'https://www.instagram.com/huizerbramzijgers/p/BVcHbVGAQrp/?img_index=2'},
+        {type:'video', src:'data/pages/volunteering/bramzijgers/bramzijgers3.mp4', href:'https://www.instagram.com/huizerbramzijgers/reel/BgbiGrwAECe/'}
+      ],
+      galleryCredit:'Photos & video: Coen Koetsier' },
+
+    /* ----- RICK ----- */
+    cv:{
+      eyebrow:'Rick', name:'CV / Résumé',
+      logo:{color:'#1565c0', initials:'CV'},
+      body:['Download my full CV, or browse the Experience and Education sections in the sidebar.'],
+      links:[{label:'Download CV (PDF)', href:'#', download:true}],
+      note:'[CV file not linked yet, add the PDF to the project and update the link above.]'
+    },
+    contact:{
+      eyebrow:'Rick', name:'Contact',
+      logo:{color:'#1565c0', initials:'@'},
+      body:['The best way to reach me is by email. I am also on LinkedIn, GitHub, and Google Scholar.'],
+      links:[
+        {label:'Email me', href:'mailto:itsrickakkerman@gmail.com'},
+        {label:'LinkedIn', href:'#'},
+        {label:'GitHub', href:'#'},
+        {label:'Scholar', href:'#'}
+      ]
+    }
+  };
+  // EDIT YOUR PAGES HERE ↑↑↑
+
+  /* ---------- rendering ---------- */
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function logoHTML(logo){
+    const ini = esc(logo.initials || '');
+    const img = logo.img
+      ? `<img src="${esc(logo.img)}" alt="" onerror="this.remove()">`   // falls back to the initials underneath if missing
+      : '';
+    const cls = 'page-logo' + (logo.fill ? ' logo--fill' : '');
+    return `<span class="${cls}" style="background:${esc(logo.color || '#888')}">${ini}${img}</span>`;
+  }
+
+  // a second organisation rendered as a card beside the main entry (e.g. Eurographics next to CVPR)
+  function peerHTML(pr){
+    const l = pr.logo || {};
+    const ini = esc(l.initials || '');
+    const img = l.img ? `<img src="${esc(l.img)}" alt="" onerror="this.remove()">` : '';
+    const lcls = 'peer-logo' + (l.fill ? ' logo--fill' : '');
+    return `<aside class="peer-card"><header class="peer-head"><span class="${lcls}" style="background:${esc(l.color || '#888')}">${ini}${img}</span><div class="peer-meta"><h2 class="peer-name">${esc(pr.name || '')}</h2>${pr.role ? `<div class="page-role">${esc(pr.role)}${pr.type ? ` · ${esc(pr.type)}` : ''}</div>` : ''}</div></header>${(pr.body || []).map(t => `<p class="page-p">${esc(t)}</p>`).join('')}</aside>`;
+  }
+
+  function mediaHTML(m){
+    if(!m) return '';
+    if(m.type === 'video')
+      return `<div class="page-media"><video controls preload="none"${m.poster?` poster="${esc(m.poster)}"`:''}><source src="${esc(m.src)}"></video></div>`;
+    if(m.type === 'youtube')
+      return `<div class="page-media embed"><iframe src="https://www.youtube.com/embed/${esc(m.id)}" title="${esc(m.title||'')}" loading="lazy" allowfullscreen></iframe></div>`;
+    if(m.type === 'image')
+      return `<div class="page-media"><img src="${esc(m.src)}" alt="${esc(m.alt||'')}" loading="lazy"></div>`;
+    return '';
+  }
+
+  function pubsHTML(pubs){
+    if(!pubs || !pubs.length) return '';
+    return `<div class="pub-list">${pubs.map(pub => {
+      const authors = esc(pub.authors || '').replace('Rick Akkerman', '<strong>Rick Akkerman</strong>');
+      const btns = (pub.links || []).map(l =>
+        `<a class="pub-btn" href="${esc(l.href)}"${l.href === '#' ? '' : ' target="_blank" rel="noopener"'}${l.download ? ' download' : ''}>${esc(l.label)}</a>`).join('');
+      const title = pub.url
+        ? `<a href="${esc(pub.url)}" target="_blank" rel="noopener">${esc(pub.title || '')}</a>`
+        : esc(pub.title || '');
+      const thumb = pub.thumb
+        ? `<div class="pub-thumb"><img src="${esc(pub.thumb)}" alt="" loading="lazy" onerror="this.closest('.pub-thumb').remove()"></div>`
+        : '';
+      return `<div class="pub">
+        ${thumb}
+        <div class="pub-body">
+          <h3 class="pub-title">${title}</h3>
+          ${pub.venue ? `<div class="pub-venue">${esc(pub.venue)}</div>` : ''}
+          ${pub.summary ? `<p class="pub-summary">${esc(pub.summary)}</p>` : ''}
+          <div class="pub-authors">${authors}</div>
+          ${btns ? `<div class="pub-btns">${btns}</div>` : ''}
+        </div>
+        ${pub.extra ? `<div class="pub-extra"><div class="pub-photos-wrap"><div class="pub-photos-inner">${pub.extra}</div></div><button type="button" class="pub-photos-toggle" aria-expanded="false" onclick="const e=this.closest('.pub-extra');const o=e.classList.toggle('open');this.setAttribute('aria-expanded',o)"><svg class="pub-photos-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>Photos</button></div>` : ''}
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  function cardsHTML(c){
+    if(!c || !c.items || !c.items.length) return '';
+    const cards = c.items.map(it => {
+      const tag = it.tag ? `<span class="tag">${esc(it.tag)}</span>` : '';
+      // small institution-logo badges overlaid in the thumbnail corners (transparent PNGs on a white pill)
+      const logos = (it.logos || []).map(lg =>
+        `<span class="thumb-logo thumb-logo--${['bl','br','bcl'].includes(lg.pos) ? lg.pos : 'bl'}"><img src="${esc(lg.src)}" alt="" loading="lazy"></span>`).join('');
+      const thumb = it.thumb
+        ? `<div class="thumb"><img src="${esc(it.thumb)}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">${logos}${tag}</div>`
+        : `<div class="thumb" style="background:${esc(it.color||'#1f3a93')}"><span class="big">${esc(it.big||it.title||'')}</span>${logos}${tag}</div>`;
+      return `<a class="card${it.wide ? ' card--wide' : ''}" href="#${esc(it.view)}" data-view="${esc(it.view)}">
+        ${thumb}
+        <div class="card-body"><div class="card-meta">
+          <h3>${esc(it.title||'')}</h3>
+          ${it.sub ? `<div class="sub">${esc(it.sub)}</div>` : ''}
+        </div></div>
+      </a>`;
+    }).join('');
+    return `<section class="page-cards">
+      ${c.heading ? `<h2 class="page-cards-head">${esc(c.heading)}</h2>` : ''}
+      <div class="grid">${cards}</div>
+    </section>`;
+  }
+
+  /* Publications on the biography landing page — built from the single
+     publications source of truth (same rich rendering as the standalone
+     Publications view), so it never drifts out of sync. Each entry carries
+     its photos in an expandable "Photos" section. */
+  const featuredPubs = PAGES.publications.pubs.map(p => {
+    if(/^InterDyn/.test(p.title)) return {...p, extra:
+      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,1fr)">`
+      + `<figure><img src="data/pages/experience/mpi/cvpr1.jpg" alt="Rick Akkerman with the InterDyn poster at CVPR 2025" loading="lazy"></figure>`
+      + `<figure><img src="data/pages/experience/mpi/cvpr2.jpg" alt="Rick Akkerman at the InterDyn poster session at CVPR 2025" loading="lazy"></figure>`
+      + `</div>`};
+    if(/^\[Re\] Explaining/.test(p.title)) return {...p, extra:
+      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,1fr)">`
+      + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-team.jpg" alt="The team with three co-authors in front of the poster" loading="lazy"></figure>`
+      + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-poster.jpg" alt="Noah van der Vleuten presenting the reproducibility poster at NeurIPS" loading="lazy"></figure>`
+      + `</div>`};
+    return p;
+  });
+  function renderFeatured(){
+    const host = document.getElementById('homeFeatured');
+    if(!host) return;
+    host.innerHTML = pubsHTML(featuredPubs);
+  }
+
+  renderFeatured();
+
+  function renderArticle(p){
+    const back = p.back || {label:'Back', view:'home'};
+    const blocks = (p.blocks || []).map(b => {
+      if(b.q)       return `<h2 class="article-q">${esc(b.q)}</h2>`;
+      if(b.pull)    return `<blockquote class="article-pull">${esc(b.pull)}</blockquote>`;
+      if(b.bio)     return `<div class="article-bio">${esc(b.bio)}</div>`;
+      if(b.note)    return `<aside class="article-note">${esc(b.note).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')}</aside>`;
+      if(b.speaker) return `<p class="article-turn"><strong>${esc(b.speaker)}:</strong> ${esc(b.p||'')}</p>`;
+      if(b.p)       return `<p>${esc(b.p)}</p>`;
+      return '';
+    }).join('');
+    const m = p.meta || {};
+    const byline = [m.name ? `<strong>${esc(m.name)}</strong>` : '', esc(m.role||''), esc(m.date||'')]
+      .filter(Boolean).join(' · ');
+    return `<article class="article">
+      ${p.kind ? `<div class="article-kind">${esc(p.kind)}</div>` : ''}
+      <h1 class="article-title">${esc(p.title || '')}</h1>
+      ${byline ? `<div class="article-byline">${byline}</div>` : ''}
+      ${p.standfirst ? `<p class="article-standfirst">${esc(p.standfirst)}</p>` : ''}
+      ${(p.bio || p.hero) ? `<div class="article-bio-row">
+        ${p.bio ? `<div class="article-bio-text">${esc(p.bio)}</div>` : ''}
+        ${p.hero ? `<div class="article-hero"><img src="${esc(p.hero)}" alt="${esc(m.name||'')}" loading="lazy"></div>` : ''}
+      </div>` : ''}
+      <div class="article-body">${blocks}</div>
+    </article>`;
+  }
+
+  function renderPage(p){
+    if(p.type === 'article') return renderArticle(p);
+    return `<article class="page">
+      ${p.peer ? peerHTML(p.peer) : ''}
+      <header class="page-head">
+        ${p.logo ? logoHTML(p.logo) : ''}
+        <div class="page-headmeta">
+          <h1>${esc(p.name || '')}</h1>
+          ${p.role   ? `<div class="page-role">${esc(p.role)}${p.type ? ` · ${esc(p.type)}` : ''}</div>` : ''}
+          ${['Experience', 'Education', 'Volunteering'].includes(p.eyebrow)
+            ? ((p.period || p.location) ? `<div class="page-period">${[p.period, p.location].filter(Boolean).map(s => esc(s.split('·')[0].trim())).join(' · ')}</div>` : '')
+            : `${p.period ? `<div class="page-period">${esc(p.period)}</div>` : ''}${p.location ? `<div class="page-location">${esc(p.location)}</div>` : ''}`}
+        </div>
+      </header>
+      ${mediaHTML(p.media)}
+      ${(p.body || []).map(t => `<p class="page-p">${esc(t)}</p>`).join('')}
+      ${(p.gallery && p.gallery.length) ? `<div class="page-gallery">${p.gallery.map(m => {
+        const inner = m.type === 'video'
+          ? `<video src="${esc(m.src)}" muted loop autoplay playsinline preload="metadata"></video>`
+          : `<img src="${esc(m.src)}" alt="${esc(m.alt||'')}" loading="lazy">`;
+        return m.href
+          ? `<a class="gallery-item gallery-item--link" href="${esc(m.href)}" target="_blank" rel="noopener">${inner}</a>`
+          : `<figure class="gallery-item">${inner}</figure>`;
+      }).join('')}</div>${p.galleryCredit ? `<p class="page-credit">${esc(p.galleryCredit)}</p>` : ''}` : ''}
+      ${(p.facts && p.facts.length) ? `<div class="page-facts">${p.facts.map(f => `<div class="page-fact"><span class="page-fact-l">${esc(f.label)}</span><span class="page-fact-v">${esc(f.value)}</span></div>`).join('')}</div>` : ''}
+      ${(p.stats && p.stats.length) ? `<div class="page-stats">${p.stats.map(s => `<div class="page-stat"><span class="page-stat-v${s.small ? ' page-stat-v--text' : ''}${s.wrap ? ' page-stat-v--wrap' : ''}${s.fit ? ' page-stat-v--fit' : ''}">${esc(s.value)}${s.href ? `<a class="stat-dl" href="${esc(s.href)}"${s.download ? ' download' : ''}>PDF</a>` : ''}</span><span class="page-stat-l">${esc(s.label)}</span></div>`).join('')}</div>` : ''}
+      ${p.thesis ? `<div class="page-thesis"><div class="page-thesis-label">Thesis</div><div class="page-thesis-title">${esc(p.thesis.title)}</div>${p.thesis.grade ? `<div class="page-thesis-grade">${esc(p.thesis.grade)}</div>` : ''}${p.thesis.desc ? `<p class="page-thesis-desc">${esc(p.thesis.desc)}</p>` : ''}</div>` : ''}
+      ${p.bullets ? `<h3 class="page-listhead">${esc(p.bulletsHead || 'Responsibilities')}</h3><ul class="page-list">${p.bullets.map(b => `<li>${typeof b === 'string' ? esc(b) : (b.html || '')}</li>`).join('')}</ul>` : ''}
+      ${(p.pubs && p.pubs.length) ? `<h3 class="page-article-sub page-pubs-head">Publications</h3>${pubsHTML(p.pubs)}${p.pubsAfter || ''}` : ''}
+      ${p.writeup ? `<section class="page-article">${p.writeup.head ? `<h2 class="page-article-head">${esc(p.writeup.head)}</h2>` : ''}${p.writeup.lead ? `<p class="page-article-lead">${esc(p.writeup.lead)}</p>` : ''}${(p.writeup.sections || []).map(s => {
+        const fig = s.img ? `<figure class="page-article-fig${typeof s.imgAfter === 'number' ? ' page-article-fig--block' : ''}"${s.figW ? ` style="width:${esc(String(s.figW))}px"` : ''}><img src="${esc(s.img)}" alt="${esc(s.imgAlt || '')}" loading="lazy">${(s.imgNum || s.imgCap) ? `<figcaption>${s.imgNum ? `<strong>Figure ${esc(String(s.imgNum))}.</strong> ` : ''}${esc(s.imgCap || '')}</figcaption>` : ''}</figure>` : '';
+        const figrow = (s.figs && s.figs.length) ? `<div class="page-article-figrow${s.figsEven ? ' page-article-figrow--even' : ''}" style="grid-template-columns:repeat(${s.figs.length},1fr)">${s.figs.map(g => `<figure><img src="${esc(g.img)}" alt="${esc(g.alt || '')}" loading="lazy">${(g.num || g.title) ? `<figcaption>${g.num ? `<strong>Figure ${esc(String(g.num))}.</strong> ` : ''}${esc(g.title || '')}</figcaption>` : ''}</figure>`).join('')}</div>` : '';
+        const paras = (s.body || []).map(t => `<p class="page-article-p">${typeof t === 'string' ? esc(t) : (t.html || '')}</p>`);
+        if (fig && typeof s.imgAfter === 'number') paras.splice(s.imgAfter + 1, 0, fig);
+        if (figrow) paras.splice((typeof s.figsAfter === 'number' ? s.figsAfter + 1 : paras.length), 0, figrow);
+        const lead = (fig && typeof s.imgAfter !== 'number') ? fig : '';
+        return `<div class="page-article-sec">${s.head ? `<h3 class="page-article-sub">${esc(s.head)}</h3>` : ''}${s.byline ? `<p class="page-article-byline">by ${esc(s.byline)}</p>` : ''}${lead}${paras.join('')}</div>`;
+      }).join('')}</section>` : ''}
+      ${(p.courses && p.courses.length) ? `<h3 class="page-listhead">Courses</h3><ul class="course-list">${p.courses.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+      ${(p.roles && p.roles.length) ? `<h3 class="page-listhead">${esc(p.rolesHead || 'Responsibilities')}</h3><ul class="page-list">${p.roles.map(r => `<li>${r.desc ? esc(r.desc) : ''}${(r.courses && r.courses.length) ? `<div class="tl-courses"><div class="page-sublisthead">Courses</div><div class="chips">${r.courses.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div></div>` : ''}</li>`).join('')}</ul>` : ''}
+      ${(p.press && p.press.length) ? `<h3 class="page-listhead">Featured</h3><div class="press-list">${p.press.map(a => `<a class="press-item" href="${esc(a.href)}" target="_blank" rel="noopener">${a.img ? `<span class="press-thumb"><img src="${esc(a.img)}" alt="" loading="lazy"></span>` : ''}<span class="press-title">${esc(a.title)}</span><span class="press-meta">${esc(a.source)}<span class="press-arr">↗</span></span></a>`).join('')}</div>` : ''}
+      ${cardsHTML(p.cards)}
+      ${p.links ? `<div class="page-links">${p.links.map(l =>
+          `<a class="btn btn-primary" href="${esc(l.href)}"${l.download?' download':''}>${esc(l.label)}</a>`).join('')}</div>` : ''}
+      ${p.note ? `<div class="page-note">${esc(p.note)}</div>` : ''}
+    </article>`;
+  }
+
+  /* ---------- routing / view switching ---------- */
+  const homeView = document.getElementById('view-home');
+  const pageView = document.getElementById('view-page');
+
+  function setActive(id){
+    // data-view items match by view id; data-scroll items (Publications/Projects)
+    // are cleared here and re-highlighted by the scroll handler when clicked.
+    document.querySelectorAll('[data-view], [data-scroll]').forEach(el =>
+      el.classList.toggle('active', el.dataset.view === id));
+  }
+
+  const topSection = document.getElementById('topSection');
+
+  // Experience and Education each render as their own vertical feed, in rail order
+  const EXP_IDS = ['mpi','icai','loyensloeff','perron038','tembo','lidl'];
+  const EDU_IDS = ['uva-msc','ut-bsc','huizermaat'];
+  const VOL_IDS = ['if-fellows','dih-hero','autumn-challenge','bramzijgers'];
+  const FEEDS = {exp:{ids:EXP_IDS, label:'Experience'}, edu:{ids:EDU_IDS, label:'Education'}, vol:{ids:VOL_IDS, label:'Volunteering'}};
+  const feedKeyFor = id => Object.keys(FEEDS).find(k => FEEDS[k].ids.includes(id)) || null;
+
+  function showView(id){
+    const data = PAGES[id];
+
+    // Experience and Education each render as one vertical feed: every entry stacked,
+    // each at least a full screen tall so only one is visible at a time. Navigating
+    // scrolls to the requested entry; the rail then tracks whichever is in view (expSpy).
+    const feedKey = feedKeyFor(id);
+    if(feedKey){
+      const feed = FEEDS[feedKey];
+      const already = pageView.dataset.feed === feedKey;
+      homeView.hidden = true;
+      if(!already){
+        pageView.innerHTML = feed.ids.map(eid =>
+          `<section class="exp-snap" id="exp-${eid}">${renderPage(PAGES[eid])}</section>`).join('');
+        pageView.dataset.feed = feedKey;
+        pageView.hidden = false;
+      }
+      document.documentElement.classList.add('exp-feed');
+      document.documentElement.classList.remove('home');
+      topSection.innerHTML = `<span class="top-label">${feed.label}</span>`;
+      alignTimeline();
+      setActive(id);
+      setTopAccent(id);
+      const target = document.getElementById('exp-' + id);
+      if(target) target.scrollIntoView({behavior: already ? 'smooth' : 'auto', block:'start'});
+      body.classList.remove('drawer');
+      return;
+    }
+    // leaving the feed: drop snap behaviour and the feed flag
+    document.documentElement.classList.remove('exp-feed');
+    pageView.dataset.feed = '';
+
+    if(id === 'home' || id === 'publications' || !data){   // home/biography (publications now live here) or unknown hash
+      pageView.hidden = true;
+      pageView.innerHTML = '';           // tear down any media so it stops/unloads
+      homeView.hidden = false;
+      topSection.textContent = '';   // no label on the home/biography view
+      document.documentElement.classList.add('home');   // page area has no top bar here
+      setActive('home');
+    } else {
+      document.documentElement.classList.remove('home');
+      homeView.hidden = true;
+      pageView.innerHTML = renderPage(data);   // media elements created only now
+      pageView.hidden = false;
+      // section label moves up to the top bar; sub-pages (articles, projects) also park their back link here so it stays fixed while scrolling
+      if(data.back){
+        const b = data.back;
+        const link = b.scroll
+          ? `<a class="top-back" href="#home" data-scroll="${esc(b.scroll)}">← ${esc(b.label)}</a>`
+          : `<a class="top-back" href="#${esc(b.view)}" data-view="${esc(b.view)}">← ${esc(b.label)}</a>`;
+        topSection.innerHTML = `${link}<span class="top-label">${esc(data.eyebrow || '')}</span>`;
+      } else {
+        topSection.innerHTML = `<span class="top-label">${esc(data.eyebrow || '')}</span>`;
+      }
+      // subpages (e.g. interviews) keep their parent rail entry highlighted
+      setActive(data.back && data.back.view ? data.back.view : id);
+    }
+    window.scrollTo(0, 0);
+    body.classList.remove('drawer');     // close mobile drawer after navigating
+  }
+
+  // smooth-scroll links (e.g. hero "View publications" -> the on-page pubs section)
+  document.addEventListener('click', e => {
+    const s = e.target.closest('[data-scroll]');
+    if(!s) return;
+    e.preventDefault();
+    showView('home');
+    // highlight the clicked rail item (Publications/Projects) instead of Biography
+    document.querySelectorAll('[data-view], [data-scroll]').forEach(el => el.classList.remove('active'));
+    s.classList.add('active');
+    const t = document.getElementById(s.dataset.scroll);
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  // intercept clicks on anything with data-view
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-view]');
+    if(!el) return;
+    e.preventDefault();
+    const id = el.dataset.view;
+    if(location.hash.slice(1) === id) showView(id);   // same hash -> no hashchange, render directly
+    else location.hash = id;
+  });
+
+  // scroll-spy: on the biography page, highlight the rail item for the section in view
+  function updateSpy(){
+    if(homeView.hidden) return;            // only while the bio/home view is showing
+    const probe = 160;                     // viewport offset below the sticky top bar
+    const pubs = document.getElementById('pubs');
+    const projects = document.getElementById('projects');
+    let sel = '[data-view="home"]';        // Biography by default (top of page)
+    if(pubs && pubs.getBoundingClientRect().top <= probe) sel = '[data-scroll="pubs"]';
+    if(projects && projects.getBoundingClientRect().top <= probe) sel = '[data-scroll="projects"]';
+    // at the very bottom, make sure the last section wins even if it is short
+    if(window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight - 2)
+      sel = '[data-scroll="projects"]';
+    document.querySelectorAll('[data-view], [data-scroll]').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(sel).forEach(el => el.classList.add('active'));
+  }
+  window.addEventListener('scroll', updateSpy, {passive:true});
+  window.addEventListener('resize', updateSpy);
+
+  // scroll-spy for the feeds: highlight whichever entry is in view
+  function expSpy(){
+    const feedKey = pageView.dataset.feed;
+    if(!feedKey || pageView.hidden || !FEEDS[feedKey]) return;
+    const ids = FEEDS[feedKey].ids;
+    const probe = 160;                     // viewport offset below the sticky top bar
+    let current = ids[0];
+    for(const eid of ids){
+      const el = document.getElementById('exp-' + eid);
+      if(el && el.getBoundingClientRect().top <= probe) current = eid;
+    }
+    setActive(current);
+    setTopAccent(current);
+  }
+
+  // the section label (EXPERIENCE / EDUCATION / VOLUNTEERING) stays the CSS
+  // accent colour, matching "Akkerman" in the top-left brand. It no longer
+  // tints to the in-view company's logo colour.
+  function setTopAccent(id){
+    const label = topSection.querySelector('.top-label');
+    if(!label) return;
+    label.style.color = '';
+  }
+  window.addEventListener('scroll', expSpy, {passive:true});
+  window.addEventListener('resize', expSpy);
+
+  // centre the experience timeline line (and its logo nodes) under the EXPERIENCE
+  // label in the top bar. The label width is not knowable in CSS, so measure it.
+  function alignTimeline(){
+    if(!pageView.dataset.feed || pageView.hidden) return;
+    const label = topSection.querySelector('.top-label');
+    if(!label) return;
+    // The label (fixed top bar) and the feed sections share the same content-left
+    // (rail width + 24px), so the line's offset from that left is just half the
+    // label's width. Measuring only the label avoids the section's margin-left
+    // slide-in transition, which would otherwise lock in a stale offset.
+    const lr = label.getBoundingClientRect();
+    pageView.style.setProperty('--tl-x', ((lr.right - lr.left) / 2) + 'px');
+  }
+  window.addEventListener('resize', alignTimeline);
+  window.addEventListener('load', alignTimeline);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(alignTimeline);
+  // recompute whenever the top-bar label changes size (e.g. the web font swapping
+  // in changes its width) so the line never drifts out of alignment
+  if(window.ResizeObserver) new ResizeObserver(alignTimeline).observe(topSection);
+
+  // back/forward + deep links
+  window.addEventListener('hashchange', () => showView(location.hash.slice(1) || 'home'));
+  showView(location.hash.slice(1) || 'home');
+  updateSpy();
+</script>
+</body>
+</html>

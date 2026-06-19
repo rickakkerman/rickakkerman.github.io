@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680" font-family="'Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#222"/>
+    </marker>
+  </defs>
+  <g stroke="#222" stroke-width="2.5" fill="none" stroke-linejoin="round">
+    <!-- Container 1 (simple box) -->
+    <rect x="300" y="55" width="150" height="80"/>
+    <!-- Container 2 (simple box) -->
+    <rect x="600" y="55" width="150" height="80"/>
+    <!-- move arrow -->
+    <line x1="460" y1="95" x2="590" y2="95" marker-end="url(#ah)"/>
+    <!-- 0.3 meter vertical dimension (heads point outward) -->
+    <line x1="185" y1="190" x2="185" y2="560" marker-start="url(#ah)" marker-end="url(#ah)"/>
+    <!-- heating cone (dashed) -->
+    <line x1="310" y1="545" x2="260" y2="210" stroke-dasharray="9 8"/>
+    <line x1="495" y1="545" x2="545" y2="210" stroke-dasharray="9 8"/>
+    <!-- Ceramic Heater -->
+    <rect x="290" y="545" width="225" height="58"/>
+    <!-- Isolation screen -->
+    <rect x="625" y="250" width="44" height="310"/>
+    <!-- Camera -->
+    <rect x="778" y="398" width="150" height="104" rx="10"/>
+    <rect x="815" y="376" width="52" height="24" rx="4"/>
+    <circle cx="845" cy="450" r="30"/>
+    <circle cx="845" cy="450" r="16"/>
+    <circle cx="905" cy="416" r="6"/>
+  </g>
+  <!-- labels (upright, centered) -->
+  <g fill="#222" font-size="26" text-anchor="middle" dominant-baseline="central">
+    <text x="402" y="183">15 seconds</text>
+    <text x="402" y="575">Ceramic Heater</text>
+    <text x="853" y="545">Camera</text>
+    <text x="166" y="375" text-anchor="end">0.3 meter</text>
+    <text transform="rotate(-90 647 405)" x="647" y="405">Isolation</text>
+  </g>
+</svg>
