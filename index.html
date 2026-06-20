@@ -360,7 +360,9 @@
   .page-article-fig figcaption{font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin-top:7px}
   .page-article-fig--block{float:none;max-width:100%;margin:0 auto 16px}
   .page-article-fig--block figcaption{text-align:center}
-  .page-article-figrow{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:10px 0 20px}
+  .page-article-figrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin:10px 0 20px}
+  .page-article-figrow img{max-width:100%}
+  .pub-photos-inner{min-width:0}
   .page-article-figrow figure{margin:0}
   .page-article-figrow img{display:block;width:100%;height:auto}
   .page-article-figrow figcaption{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin-top:9px;text-align:center}
@@ -1301,12 +1303,12 @@
      its photos in an expandable "Photos" section. */
   const featuredPubs = PAGES.publications.pubs.map(p => {
     if(/^InterDyn/.test(p.title)) return {...p, extra:
-      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,1fr)">`
+      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,minmax(0,1fr))">`
       + `<figure><img src="data/pages/experience/mpi/cvpr1.jpg" alt="Rick Akkerman with the InterDyn poster at CVPR 2025" loading="lazy"></figure>`
       + `<figure><img src="data/pages/experience/mpi/cvpr2.jpg" alt="Rick Akkerman at the InterDyn poster session at CVPR 2025" loading="lazy"></figure>`
       + `</div>`};
     if(/^\[Re\] Explaining/.test(p.title)) return {...p, extra:
-      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,1fr)">`
+      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,minmax(0,1fr))">`
       + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-team.jpg" alt="The team with three co-authors in front of the poster" loading="lazy"></figure>`
       + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-poster.jpg" alt="Noah van der Vleuten presenting the reproducibility poster at NeurIPS" loading="lazy"></figure>`
       + `</div>`};
@@ -1378,7 +1380,7 @@
       ${(p.pubs && p.pubs.length) ? `<h3 class="page-article-sub page-pubs-head">Publications</h3>${pubsHTML(p.pubs)}${p.pubsAfter || ''}` : ''}
       ${p.writeup ? `<section class="page-article">${p.writeup.head ? `<h2 class="page-article-head">${esc(p.writeup.head)}</h2>` : ''}${p.writeup.lead ? `<p class="page-article-lead">${esc(p.writeup.lead)}</p>` : ''}${(p.writeup.sections || []).map(s => {
         const fig = s.img ? `<figure class="page-article-fig${typeof s.imgAfter === 'number' ? ' page-article-fig--block' : ''}"${s.figW ? ` style="width:${esc(String(s.figW))}px"` : ''}><img src="${esc(s.img)}" alt="${esc(s.imgAlt || '')}" loading="lazy">${(s.imgNum || s.imgCap) ? `<figcaption>${s.imgNum ? `<strong>Figure ${esc(String(s.imgNum))}.</strong> ` : ''}${esc(s.imgCap || '')}</figcaption>` : ''}</figure>` : '';
-        const figrow = (s.figs && s.figs.length) ? `<div class="page-article-figrow${s.figsEven ? ' page-article-figrow--even' : ''}" style="grid-template-columns:repeat(${s.figs.length},1fr)">${s.figs.map(g => `<figure><img src="${esc(g.img)}" alt="${esc(g.alt || '')}" loading="lazy">${(g.num || g.title) ? `<figcaption>${g.num ? `<strong>Figure ${esc(String(g.num))}.</strong> ` : ''}${esc(g.title || '')}</figcaption>` : ''}</figure>`).join('')}</div>` : '';
+        const figrow = (s.figs && s.figs.length) ? `<div class="page-article-figrow${s.figsEven ? ' page-article-figrow--even' : ''}" style="grid-template-columns:repeat(${s.figs.length},minmax(0,1fr))">${s.figs.map(g => `<figure><img src="${esc(g.img)}" alt="${esc(g.alt || '')}" loading="lazy">${(g.num || g.title) ? `<figcaption>${g.num ? `<strong>Figure ${esc(String(g.num))}.</strong> ` : ''}${esc(g.title || '')}</figcaption>` : ''}</figure>`).join('')}</div>` : '';
         const paras = (s.body || []).map(t => `<p class="page-article-p">${typeof t === 'string' ? esc(t) : (t.html || '')}</p>`);
         if (fig && typeof s.imgAfter === 'number') paras.splice(s.imgAfter + 1, 0, fig);
         if (figrow) paras.splice((typeof s.figsAfter === 'number' ? s.figsAfter + 1 : paras.length), 0, figrow);
