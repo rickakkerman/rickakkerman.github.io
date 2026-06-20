@@ -42,13 +42,13 @@
 
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  html,body{overflow-x:hidden;max-width:100%}   /* cap page width on all WebKit versions (iOS shrink-to-fit guard) */
+  html,body{overflow-x:clip;max-width:100%}   /* cap page width without creating a scroll container (keeps window.scrollTo working) */
   body{
     font-family:var(--body);
     background:var(--bg);
     color:var(--ink);
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    overflow-x:clip;
   }
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -275,7 +275,7 @@
     width:64px;height:64px;border-radius:14px;flex:0 0 64px;position:relative;overflow:hidden;
     display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;font-family:var(--display);
   }
-  .page-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:8px}
+  .page-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:0}
   .page-headmeta h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;line-height:1.05}
   .page-role{font-size:16px;color:var(--ink);font-weight:600;margin-top:6px}
   .page-period{font-size:14px;color:var(--ink-soft);margin-top:2px}
@@ -444,8 +444,8 @@
 
   /* card grid embedded inside a page (e.g. ICAI interviews/showcase) */
   .page-cards{margin-top:34px}
-  .page-cards-head{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;
-    margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .page-cards-head{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.01em;
+    margin-bottom:16px}
   /* interview/article cards use portrait thumbnails in a tighter grid */
   .page-cards .grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
   .page-cards .thumb{aspect-ratio:2/3}
@@ -495,17 +495,16 @@
   html.exp-feed .exp-snap::before{left:calc(var(--tl-x, 54px) - 1px)}
   html.exp-feed .page-logo{
     position:absolute;left:calc(var(--tl-x, 54px) - 128px);top:50%;transform:translate(-50%,-50%);
-    flex:none;width:80px;height:80px;z-index:1;box-shadow:0 0 0 5px var(--bg)}
+    flex:none;width:60px;height:60px;z-index:1;box-shadow:0 0 0 5px var(--bg)}
   @media (max-width:720px){
     html.exp-feed .exp-snap{padding-left:88px}
     html.exp-feed .exp-snap::before{left:33px}
     html.exp-feed .page-logo{left:-54px;width:64px;height:64px}
   }
-  /* line starts at the first logo (MPI) and ends at the last logo — no overhang
-     above the first node or below the last. The exact offsets are measured in JS
-     (the logo sits near the top of each tall snap, not at its centre). */
+  /* line starts at the first logo (MPI) — no overhang above the first node. The
+     offset is measured in JS (the logo sits near the top of each tall snap). The
+     bottom is left untrimmed so the line runs the full length of the last entry. */
   html.exp-feed .exp-snap:first-child::before{top:var(--tl-top,0)}
-  html.exp-feed .exp-snap:last-child::before{bottom:var(--tl-bottom,0)}
 
   /* long-form interview / article reading layout */
   .article{max-width:760px;margin:0 auto}
@@ -1063,7 +1062,10 @@
         'Designed a framework to help navigate quality requirements of federated learning (privacy, communication efficiency, etc.) and their competing relationships',
         'Engaged stakeholders across the company, from the data team to the leadership team, running individual workshops on machine learning and federated learning to prepare them to assess the framework',
         'Evaluated the framework through a case study using the Unified Theory of Acceptance and Use of Technology (UTAUT) model'
-      ]
+      ],
+      project:{ view:'project-tembo', thumb:'data/pages/experience/tembo/federated-learning.svg',
+        title:'Mapping the quality trade-offs of federated learning',
+        sub:'A systematic review and decision framework for businesses weighing privacy, efficiency, and security, from my Honours thesis at Tembo.' }
     },
     'project-tembo':{
       eyebrow:'Project', name:'Mapping the trade-offs of federated learning',
@@ -1099,7 +1101,10 @@
         'Tuned the heating process, comparing different heaters and sweeping heating time and camera distance to characterise how they raise leakage contrast while lowering container homogeneity, then fixing the setup that best separated the two classes.',
         'Collected and labelled a thermal image dataset of roughly 1,000 samples. Despite the automated capture, it was labour-intensive: every box was manually prepared with a graded amount of leakage (low, moderate, or heavy), shaken to vary pod positions, and cleaned for reuse between rounds.',
         {html:'The resulting dataset contributed towards Akash Ravi Prame\'s <a class="inline-link" href="https://purl.utwente.nl/essays/88563" target="_blank" rel="noopener">MSc thesis on hybrid learning for leakage detection<span class="inline-arr">↗</span></a>.'}
-      ]
+      ],
+      project:{ view:'project-perron038', thumb:'data/pages/experience/perron038/box1.png',
+        title:'Building a dataset for detecting leaking detergent pods with thermal imaging',
+        sub:'A non-destructive inspection method using active thermography, from my internship at Perron038.' }
     },
     'project-perron038':{
       eyebrow:'Project', name:'How do you tell whether a sealed box of detergent pods contains a leaking pod, without opening it?',
@@ -1395,6 +1400,7 @@
       ${(p.stats && p.stats.length) ? `<div class="page-stats">${p.stats.map(s => `<div class="page-stat"><span class="page-stat-v${s.small ? ' page-stat-v--text' : ''}${s.wrap ? ' page-stat-v--wrap' : ''}${s.fit ? ' page-stat-v--fit' : ''}">${esc(s.value)}${s.href ? `<a class="stat-dl" href="${esc(s.href)}"${s.download ? ' download' : ''}>PDF</a>` : ''}</span><span class="page-stat-l">${esc(s.label)}</span></div>`).join('')}</div>` : ''}
       ${p.thesis ? `<div class="page-thesis"><div class="page-thesis-label">Thesis</div><div class="page-thesis-title">${esc(p.thesis.title)}</div>${p.thesis.grade ? `<div class="page-thesis-grade">${esc(p.thesis.grade)}</div>` : ''}${p.thesis.desc ? `<p class="page-thesis-desc">${esc(p.thesis.desc)}</p>` : ''}</div>` : ''}
       ${p.bullets ? `<h3 class="page-listhead">${esc(p.bulletsHead || 'Responsibilities')}</h3><ul class="page-list">${p.bullets.map(b => `<li>${typeof b === 'string' ? esc(b) : (b.html || '')}</li>`).join('')}</ul>` : ''}
+      ${p.project ? `<h3 class="page-listhead">Read more</h3><div class="proj-list"><a class="proj-card" href="#${esc(p.project.view)}" data-view="${esc(p.project.view)}">${p.project.thumb ? `<span class="proj-card-thumb"><img src="${esc(p.project.thumb)}" alt="" loading="lazy" onerror="this.closest('.proj-card-thumb').remove()"></span>` : ''}<span class="proj-card-body"><span class="proj-card-title">${esc(p.project.title)}</span>${p.project.sub ? `<span class="proj-card-sub">${esc(p.project.sub)}</span>` : ''}</span></a></div>` : ''}
       ${(p.pubs && p.pubs.length) ? `<h3 class="page-article-sub page-pubs-head">Publications</h3>${pubsHTML(p.pubs)}${p.pubsAfter || ''}` : ''}
       ${p.writeup ? `<section class="page-article">${p.writeup.head ? `<h2 class="page-article-head">${esc(p.writeup.head)}</h2>` : ''}${p.writeup.lead ? `<p class="page-article-lead">${esc(p.writeup.lead)}</p>` : ''}${(p.writeup.sections || []).map(s => {
         const fig = s.img ? `<figure class="page-article-fig${typeof s.imgAfter === 'number' ? ' page-article-fig--block' : ''}"${s.figW ? ` style="width:${esc(String(s.figW))}px"` : ''}><img src="${esc(s.img)}" alt="${esc(s.imgAlt || '')}" loading="lazy">${(s.imgNum || s.imgCap) ? `<figcaption>${s.imgNum ? `<strong>Figure ${esc(String(s.imgNum))}.</strong> ` : ''}${esc(s.imgCap || '')}</figcaption>` : ''}</figure>` : '';
@@ -1435,8 +1441,10 @@
   const FEEDS = {exp:{ids:EXP_IDS, label:'Experience'}, edu:{ids:EDU_IDS, label:'Education'}, vol:{ids:VOL_IDS, label:'Volunteering'}};
   const feedKeyFor = id => Object.keys(FEEDS).find(k => FEEDS[k].ids.includes(id)) || null;
 
+  let currentView = 'home';     // the view currently on screen (for dynamic Back)
   function showView(id){
     const data = PAGES[id];
+    const cameFrom = currentView;   // where we navigated from, so Back can return there
 
     // Experience and Education each render as one vertical feed: every entry stacked,
     // each at least a full screen tall so only one is visible at a time. Navigating
@@ -1461,6 +1469,7 @@
       const target = document.getElementById('exp-' + id);
       if(target) target.scrollIntoView({behavior: already ? 'smooth' : 'auto', block:'start'});
       body.classList.remove('drawer');
+      currentView = id;
       return;
     }
     // leaving the feed: drop snap behaviour and the feed flag
@@ -1480,20 +1489,26 @@
       pageView.innerHTML = renderPage(data);   // media elements created only now
       pageView.hidden = false;
       // section label moves up to the top bar; sub-pages (articles, projects) also park their back link here so it stays fixed while scrolling
-      if(data.back){
-        const b = data.back;
-        const link = b.scroll
-          ? `<a class="top-back" href="#home" data-scroll="${esc(b.scroll)}">← ${esc(b.label)}</a>`
-          : `<a class="top-back" href="#${esc(b.view)}" data-view="${esc(b.view)}">← ${esc(b.label)}</a>`;
+      // Back returns to the view we actually came from (e.g. the experience entry),
+      // falling back to the page's static back target on a deep link / from home.
+      let eb = data.back;
+      if(cameFrom && cameFrom !== id && cameFrom !== 'home' && PAGES[cameFrom]){
+        eb = {label: PAGES[cameFrom].name || PAGES[cameFrom].eyebrow || 'Back', view: cameFrom};
+      }
+      if(eb){
+        const link = eb.scroll
+          ? `<a class="top-back" href="#home" data-scroll="${esc(eb.scroll)}">← ${esc(eb.label)}</a>`
+          : `<a class="top-back" href="#${esc(eb.view)}" data-view="${esc(eb.view)}">← ${esc(eb.label)}</a>`;
         topSection.innerHTML = `${link}<span class="top-label">${esc(data.eyebrow || '')}</span>`;
       } else {
         topSection.innerHTML = `<span class="top-label">${esc(data.eyebrow || '')}</span>`;
       }
       // subpages (e.g. interviews) keep their parent rail entry highlighted
-      setActive(data.back && data.back.view ? data.back.view : id);
+      setActive(eb && eb.view ? eb.view : id);
     }
     window.scrollTo(0, 0);
     body.classList.remove('drawer');     // close mobile drawer after navigating
+    currentView = id;
   }
 
   // smooth-scroll links (e.g. hero "View publications" -> the on-page pubs section)
@@ -1578,21 +1593,16 @@
     trimTimeline();
   }
 
-  // trim the line so it begins at the first logo's centre and ends at the last
-  // logo's centre — no overhang above the first node or below the last
+  // trim the line so it begins at the first logo's centre — no overhang above the
+  // first node. The bottom is left untrimmed so it runs to the end of the last entry.
   function trimTimeline(){
     const snaps = pageView.querySelectorAll('.exp-snap');
     if(!snaps.length) return;
-    const first = snaps[0], last = snaps[snaps.length - 1];
+    const first = snaps[0];
     const firstLogo = first.querySelector('.page-logo');
-    const lastLogo = last.querySelector('.page-logo');
     if(firstLogo){
       const lc = firstLogo.getBoundingClientRect(), fr = first.getBoundingClientRect();
       first.style.setProperty('--tl-top', Math.max(0, lc.top + lc.height / 2 - fr.top) + 'px');
-    }
-    if(lastLogo){
-      const lc = lastLogo.getBoundingClientRect(), lrr = last.getBoundingClientRect();
-      last.style.setProperty('--tl-bottom', Math.max(0, lrr.bottom - (lc.top + lc.height / 2)) + 'px');
     }
   }
   window.addEventListener('resize', alignTimeline);
