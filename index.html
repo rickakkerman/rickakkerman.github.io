@@ -501,6 +501,11 @@
     html.exp-feed .exp-snap::before{left:33px}
     html.exp-feed .page-logo{left:-54px;width:64px;height:64px}
   }
+  /* line starts at the first logo (MPI) and ends at the last logo — no overhang
+     above the first node or below the last. The exact offsets are measured in JS
+     (the logo sits near the top of each tall snap, not at its centre). */
+  html.exp-feed .exp-snap:first-child::before{top:var(--tl-top,0)}
+  html.exp-feed .exp-snap:last-child::before{bottom:var(--tl-bottom,0)}
 
   /* long-form interview / article reading layout */
   .article{max-width:760px;margin:0 auto}
@@ -1570,6 +1575,25 @@
     // slide-in transition, which would otherwise lock in a stale offset.
     const lr = label.getBoundingClientRect();
     pageView.style.setProperty('--tl-x', ((lr.right - lr.left) / 2) + 'px');
+    trimTimeline();
+  }
+
+  // trim the line so it begins at the first logo's centre and ends at the last
+  // logo's centre — no overhang above the first node or below the last
+  function trimTimeline(){
+    const snaps = pageView.querySelectorAll('.exp-snap');
+    if(!snaps.length) return;
+    const first = snaps[0], last = snaps[snaps.length - 1];
+    const firstLogo = first.querySelector('.page-logo');
+    const lastLogo = last.querySelector('.page-logo');
+    if(firstLogo){
+      const lc = firstLogo.getBoundingClientRect(), fr = first.getBoundingClientRect();
+      first.style.setProperty('--tl-top', Math.max(0, lc.top + lc.height / 2 - fr.top) + 'px');
+    }
+    if(lastLogo){
+      const lc = lastLogo.getBoundingClientRect(), lrr = last.getBoundingClientRect();
+      last.style.setProperty('--tl-bottom', Math.max(0, lrr.bottom - (lc.top + lc.height / 2)) + 'px');
+    }
   }
   window.addEventListener('resize', alignTimeline);
   window.addEventListener('load', alignTimeline);
