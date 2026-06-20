@@ -436,7 +436,6 @@
   @media(max-width:720px){
     .pub{flex-direction:column;gap:14px}
     .pub-thumb{order:-1;width:100%;flex-basis:auto;max-width:320px}
-    .pub-extra{display:none}   /* hide the expandable Photos section on phones */
   }
 
   /* card grid embedded inside a page (e.g. ICAI interviews/showcase) */
@@ -1302,21 +1301,8 @@
 
   /* Publications on the biography landing page — built from the single
      publications source of truth (same rich rendering as the standalone
-     Publications view), so it never drifts out of sync. Each entry carries
-     its photos in an expandable "Photos" section. */
-  const featuredPubs = PAGES.publications.pubs.map(p => {
-    if(/^InterDyn/.test(p.title)) return {...p, extra:
-      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,minmax(0,1fr))">`
-      + `<figure><img src="data/pages/experience/mpi/cvpr1.jpg" alt="Rick Akkerman with the InterDyn poster at CVPR 2025" loading="lazy"></figure>`
-      + `<figure><img src="data/pages/experience/mpi/cvpr2.jpg" alt="Rick Akkerman at the InterDyn poster session at CVPR 2025" loading="lazy"></figure>`
-      + `</div>`};
-    if(/^\[Re\] Explaining/.test(p.title)) return {...p, extra:
-      `<div class="page-article-figrow page-article-figrow--even" style="grid-template-columns:repeat(2,minmax(0,1fr))">`
-      + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-team.jpg" alt="The team with three co-authors in front of the poster" loading="lazy"></figure>`
-      + `<figure><img src="data/pages/education/universiteit_amsterdam/uva-poster.jpg" alt="Noah van der Vleuten presenting the reproducibility poster at NeurIPS" loading="lazy"></figure>`
-      + `</div>`};
-    return p;
-  });
+     Publications view), so it never drifts out of sync. */
+  const featuredPubs = PAGES.publications.pubs;
   function renderFeatured(){
     const host = document.getElementById('homeFeatured');
     if(!host) return;
