@@ -496,14 +496,23 @@
   html.exp-feed .page-logo{
     position:absolute;left:calc(var(--tl-x, 54px) - 128px);top:50%;transform:translate(-50%,-50%);
     flex:none;width:60px;height:60px;z-index:1;box-shadow:0 0 0 5px var(--bg)}
-  /* on phones, drop the timeline entirely: no vertical line, logo back inline
-     beside the title (like a regular page), no indent */
+  /* on phones, drop the timeline entirely: no vertical line, no indent. Lay the
+     header out as a grid: logo + organisation name on the first row, then the
+     role and date/location stacked full-width underneath. */
   @media (max-width:720px){
     html.exp-feed .exp-snap{padding-left:0}
     html.exp-feed .exp-snap::before{display:none}
-    html.exp-feed .page-logo{position:relative;left:auto;top:auto;transform:none;width:64px;height:64px;box-shadow:none}
-    html.exp-feed .page-head{align-items:flex-start}
-    html.exp-feed .page-headmeta{min-width:0;flex:1 1 auto}
+    html.exp-feed .page-logo{position:relative;left:auto;top:auto;transform:none;width:64px;height:64px;box-shadow:none;grid-area:logo}
+    html.exp-feed .page-head{
+      display:grid;grid-template-columns:auto 1fr;
+      grid-template-areas:"logo name" "role role" "period period";
+      align-items:center;column-gap:16px;row-gap:2px;
+    }
+    html.exp-feed .page-headmeta{display:contents}
+    html.exp-feed .page-head h1{grid-area:name;min-width:0}
+    html.exp-feed .page-role{grid-area:role;margin-top:10px}
+    html.exp-feed .page-period{grid-area:period}
+    html.exp-feed .page-location{grid-area:period}
   }
   /* line starts at the first logo (MPI) — no overhang above the first node. The
      offset is measured in JS (the logo sits near the top of each tall snap). The
