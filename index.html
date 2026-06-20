@@ -501,7 +501,9 @@
   @media (max-width:720px){
     html.exp-feed .exp-snap{padding-left:0}
     html.exp-feed .exp-snap::before{display:none}
-    html.exp-feed .page-logo{position:static;left:auto;top:auto;transform:none;width:64px;height:64px;box-shadow:none}
+    html.exp-feed .page-logo{position:relative;left:auto;top:auto;transform:none;width:64px;height:64px;box-shadow:none}
+    html.exp-feed .page-head{align-items:flex-start}
+    html.exp-feed .page-headmeta{min-width:0;flex:1 1 auto}
   }
   /* line starts at the first logo (MPI) — no overhang above the first node. The
      offset is measured in JS (the logo sits near the top of each tall snap). The
