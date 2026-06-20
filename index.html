@@ -169,6 +169,7 @@
   .main{
     margin-left:var(--rail-w);margin-top:var(--top-h);
     padding:4px 24px 80px;transition:margin-left .2s ease;
+    overflow-x:clip;   /* never let page content widen past the viewport (iOS shrink-to-fit guard) */
   }
 
   /* Biography/home page: no top bar over the page area. The fixed bar only spans
