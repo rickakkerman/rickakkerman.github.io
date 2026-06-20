@@ -402,7 +402,7 @@
 
   /* publications list — text left, thumbnail right, outlined action buttons */
   .pub-list{display:flex;flex-direction:column;gap:18px;margin-top:4px}
-  .pub{position:relative;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;padding:20px 22px;
+  .pub{position:relative;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;padding:20px 22px;min-width:0;max-width:100%;
     border:1px solid var(--line);border-radius:12px;background:#fff;
     transition:box-shadow .15s ease,border-color .15s ease}
   .pub:hover{border-color:#d7d1c6;box-shadow:0 4px 18px rgba(0,0,0,.06)}
@@ -420,14 +420,14 @@
     background:transparent;text-decoration:none;transition:background .15s ease,color .15s ease}
   .pub-btn:hover{background:#1565c0;color:#fff}
   .pub-cite{font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-left:2px}
-  .pub-extra{position:relative;flex-basis:100%;width:100%;margin:-24px 0 0;padding:0}
+  .pub-extra{position:relative;flex-basis:100%;width:100%;min-width:0;max-width:100%;margin:-24px 0 0;padding:0}
   .pub-photos-toggle{position:absolute;left:50%;top:20px;transform:translate(-50%,-50%);z-index:2;display:flex;align-items:center;gap:7px;padding:0 12px;border:none;background:#fff;cursor:pointer;font-family:var(--body);font-size:13.5px;font-weight:600;letter-spacing:.01em;color:var(--ink-soft);transition:color .15s ease}
   .pub-photos-toggle:hover{color:var(--ink)}
   .pub-photos-chev{transition:transform .25s ease;flex:none}
   .pub-extra.open .pub-photos-chev{transform:rotate(180deg)}
-  .pub-photos-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease}
+  .pub-photos-wrap{display:grid;grid-template-rows:0fr;min-width:0;max-width:100%;overflow:hidden;transition:grid-template-rows .32s ease}
   .pub-extra.open .pub-photos-wrap{grid-template-rows:1fr}
-  .pub-photos-inner{overflow:hidden;min-height:0}
+  .pub-photos-inner{overflow:hidden;min-height:0;min-width:0;max-width:100%}
   .pub-photos-inner > *{margin-top:38px}
   .pub-extra-p{font-size:14.5px;line-height:1.7;color:var(--ink);margin:0 0 14px}
   .pub-thumb{flex:0 0 200px;width:200px;border-radius:10px;overflow:hidden;
