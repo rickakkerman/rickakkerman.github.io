@@ -62,11 +62,15 @@
   .top-left{display:flex;align-items:center;gap:14px;flex:0 0 auto}
   .top-spacer{flex:1}
   .menu-btn{
-    width:40px;height:40px;border-radius:50%;
-    display:grid;place-items:center;transition:background .15s;
+    width:40px;height:40px;border-radius:50%;margin-left:-8px;
+    display:none;place-items:center;transition:background .15s;
+    background:none;border:none;padding:0;cursor:pointer;color:var(--ink);
   }
   .menu-btn:hover{background:var(--hover)}
   .menu-btn svg{width:22px;height:22px}
+  /* dim backdrop behind the mobile drawer */
+  .rail-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:39}
+  body.drawer .rail-backdrop{opacity:1;pointer-events:auto}
 
   .brand{display:flex;align-items:baseline;gap:2px;user-select:none}
   .brand .first{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
@@ -549,7 +553,8 @@
   }
   @media(max-width:720px){
     body{--rail-w:0px}
-    .rail{transform:translateX(-100%);width:248px;box-shadow:0 0 40px rgba(0,0,0,.18)}
+    .menu-btn{display:grid}
+    .rail{transform:translateX(-100%);width:248px;box-shadow:0 0 40px rgba(0,0,0,.18);transition:transform .25s ease;z-index:60}
     body.drawer .rail{transform:translateX(0)}
     .main{margin-left:0}
     .topbar-section{display:none}
@@ -559,8 +564,12 @@
 <body>
 
   <!-- ======= TOP BAR ======= -->
+  <div class="rail-backdrop" id="railBackdrop"></div>
   <header class="topbar">
     <div class="top-left">
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <a class="brand" href="#home" data-view="home">
         <span class="first">Rick</span>
         <span class="last">Akkerman</span>
@@ -747,6 +756,21 @@
 <script>
   // collapse / drawer toggle for the sidebar
   const body = document.body;
+  // hamburger: slide the sidebar in/out on mobile
+  const menuBtn = document.getElementById('menuBtn');
+  const railBackdrop = document.getElementById('railBackdrop');
+  if(menuBtn){
+    menuBtn.addEventListener('click', () => {
+      const open = body.classList.toggle('drawer');
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  if(railBackdrop){
+    railBackdrop.addEventListener('click', () => {
+      body.classList.remove('drawer');
+      if(menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
   // collapse / expand any toggleable rail section
   document.querySelectorAll('.rail-head--toggle').forEach(head => {
     head.addEventListener('click', () => {
