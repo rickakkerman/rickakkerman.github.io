@@ -327,6 +327,9 @@
     display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;font-family:var(--display);
   }
   .page-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:0}
+  /* clickable org logo: subtle accent ring on hover (no transform — feed logos use it to position) */
+  .page-logo--link{cursor:pointer;transition:filter .15s ease}
+  .page-logo--link:hover{filter:brightness(.94);outline:2px solid var(--accent);outline-offset:2px}
   .page-headmeta h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;line-height:1.05}
   .page-role{font-size:16px;color:var(--ink);font-weight:600;margin-top:6px}
   .page-period{font-size:14px;color:var(--ink-soft);margin-top:2px}
@@ -922,7 +925,7 @@
     mpi:{
       eyebrow:'Experience', name:'Max Planck Institute for Intelligent Systems', role:'Research Engineer', type:'Full-time',
       period:'Feb 2024 – Present · 2 yrs 5 mos', location:'Tübingen, Baden-Württemberg, Germany · On-site',
-      logo:{color:'#0a6b54', initials:'MPI', img:'data/icons/mpi.jpeg'}, accent:'#3f8f80',
+      logo:{color:'#0a6b54', initials:'MPI', img:'data/icons/mpi.jpeg', url:'https://is.mpg.de/'}, accent:'#3f8f80',
       body:['3D computer vision and generative AI for digital humans (SMPL-X, diffusion models, VLMs)'],
       bullets:[
         'First-authored InterDyn (CVPR 2025), on video diffusion models for object dynamics, and co-authored a second CVPR 2025 paper on occluded face expression reconstruction',
@@ -937,7 +940,7 @@
     loyensloeff:{
       eyebrow:'Experience', name:'Loyens & Loeff', role:'Working Student in the Technology & Innovation department', type:'Part-time',
       period:'Jun 2023 – Aug 2023 · 3 mos', location:'Amsterdam, Noord Holland, Netherlands · On-site',
-      logo:{color:'#1a1714', initials:'L&L', img:'data/icons/loyens_loeff.jpeg', fill:true}, accent:'#0a5896',
+      logo:{color:'#1a1714', initials:'L&L', img:'data/icons/loyens_loeff.jpeg', fill:true, url:'https://www.loyensloeff.com/'}, accent:'#0a5896',
       body:['Supported the modernization of legal work at a leading law firm through AI and legal tech adoption'],
       bullets:[
         'Contributed to the implementation and adoption of AI-powered legal tech applications',
@@ -948,7 +951,7 @@
     icai:{
       eyebrow:'Experience', name:'Innovation Center for Artificial Intelligence', role:'Communication Manager', type:'Self-employed',
       period:'Aug 2022 – Mar 2023 · 8 mos', location:'Amsterdam, Noord Holland, Netherlands · Hybrid',
-      logo:{color:'#1f3a93', initials:'ICAI', img:'data/icons/icai.jpeg'}, accent:'#d4791c',
+      logo:{color:'#1f3a93', initials:'ICAI', img:'data/icons/icai.jpeg', url:'https://icai.ai/'}, accent:'#d4791c',
       body:['Grew the public profile of UvA’s AI innovation center and made its AI-for-good research accessible to a wider audience'],
       bullets:[
         'Created, edited, and published all content across the website, LinkedIn, and social media channels',
@@ -1119,7 +1122,7 @@
     tembo:{
       eyebrow:'Experience', name:'Tembo Group', role:'Design Science Intern', type:'Full-time',
       period:'May 2021 – Aug 2021 · 4 mos', location:'Kampen, Overijssel, Netherlands · On-site',
-      logo:{color:'#e67e22', initials:'TE', img:'data/icons/tembo.jpeg', fill:true},
+      logo:{color:'#e67e22', initials:'TE', img:'data/icons/tembo.jpeg', fill:true, url:'https://www.tembo.eu/'},
       body:['Investigated the quality trade-offs of federated learning for industrial machinery manufacturing companies.'],
       bullets:[
         'Conducted a systematic literature review to map the non-functional requirements of federated learning',
@@ -1158,7 +1161,7 @@
     perron038:{
       eyebrow:'Experience', name:'Perron038', role:'Machine Learning Intern', type:'Full-time',
       period:'Feb 2021 – May 2021 · 4 mos', location:'Zwolle, Overijssel, Netherlands',
-      logo:{color:'#16a085', initials:'P38', img:'data/icons/perron038.jpeg'}, accent:'#1a1a1a',
+      logo:{color:'#16a085', initials:'P38', img:'data/icons/perron038.jpeg', url:'https://www.perron038.nl/en/home/'}, accent:'#1a1a1a',
       body:['Researched a non-destructive way to detect leakage inside sealed, opaque detergent-pod containers, where a broken pod can leak fluid that is impossible to spot from the outside. As part of the PRISMA project with Tembo, I explored active thermography: briefly heating each container so that leaked fluid and the surrounding plastic settle at slightly different temperatures, which an infrared camera can then pick up.'],
       bullets:[
         'Co-designed a semi-automated capture setup, pairing a collaborative robot for pick-and-place with a ceramic heater and an infrared thermal camera that imaged each container immediately after heating. The cobot heated every box in exactly the same way, key to collecting a consistent dataset.',
@@ -1211,13 +1214,13 @@
     lidl:{
       eyebrow:'Experience', name:'LIDL Netherlands', role:'Customer Service Representative', type:'Part-time',
       period:'Jul 2018 – Mar 2019 · 9 mos', location:'Huizen, Noord Holland, Netherlands · On-site',
-      logo:{color:'#0050aa', initials:'LDL', img:'data/icons/lidl.jpeg', fill:true},
+      logo:{color:'#0050aa', initials:'LDL', img:'data/icons/lidl.jpeg', fill:true, url:'https://www.lidl.nl/'},
       body:['Handled 100+ customer requests a day by phone and email, resolving complaints and service issues at LIDL NL Headquarters.']
     },
 
     /* ----- EDUCATION ----- */
     'uva-msc':{ eyebrow:'Education', name:'University of Amsterdam', role:'MSc Artificial Intelligence', period:'Sep 2021 – Aug 2024', location:'Amsterdam, Noord Holland, Netherlands',
-      logo:{color:'#000', initials:'UvA', img:'data/icons/uva.jpeg', fill:true}, accent:'#1a1a1a',
+      logo:{color:'#000', initials:'UvA', img:'data/icons/uva.jpeg', fill:true, url:'https://www.uva.nl/en'}, accent:'#1a1a1a',
       body:['My master’s focused on deep learning for computer vision, the direction I now work in as a research engineer at the Max Planck Institute. Alongside the coursework I took part in the ML Reproducibility Challenge and graduated with a thesis on generative video models.'],
       stats:[
         {value:'3.8', label:'GPA · avg 7.63/10'},
@@ -1230,7 +1233,7 @@
         'Computer Vision II', 'Reinforcement Learning', 'Machine Learning I', 'Agent-based Modelling'
       ] */ },
     'ut-bsc':{ eyebrow:'Education', name:'University of Twente', role:'BSc Technology, Liberal Arts & Sciences', period:'2018 – 2021', location:'Enschede, Overijssel, Netherlands',
-      logo:{color:'#0d2d5c', initials:'UT', img:'data/icons/ut.jpeg', fill:true}, accent:'#1a1a1a',
+      logo:{color:'#0d2d5c', initials:'UT', img:'data/icons/ut.jpeg', fill:true, url:'https://www.utwente.nl/en/'}, accent:'#1a1a1a',
       body:['Technology, Liberal Arts & Sciences is Twente’s broad, interdisciplinary engineering degree, in which students design their own track across the sciences. I focused mine on data science and machine learning, and broadened it with a minor in AI at the University of Amsterdam and the Processes of Change honours programme.'],
       stats:[
         {value:'4.0', label:'GPA'},
@@ -1248,7 +1251,7 @@
       },
       },
     huizermaat:{ eyebrow:'Education', name:'Huizermaat', role:'VWO', period:'Sep 2012 – Jun 2018', location:'Huizen, Noord Holland, Netherlands',
-      logo:{color:'#4a7c59', initials:'HM', img:'data/icons/huizermaat.jpeg'},
+      logo:{color:'#4a7c59', initials:'HM', img:'data/icons/huizermaat.jpeg', url:'https://huizermaat.nl/'},
       writeup:{
         sections:[
           {head:'Debating Team', figsEven:true, figs:[
@@ -1265,7 +1268,7 @@
 
     /* ----- VOLUNTEERING ----- */
     'if-fellows':{ eyebrow:'Volunteering', name:'University of Twente Innovation Fellows', role:'Fellow', type:'Education', period:'Oct 2019 – Mar 2024 · 4 yrs 6 mos', location:'Enschede, Overijssel, Netherlands',
-      logo:{color:'#00a6d6', initials:'IF', img:'data/icons/uif.jpeg'},
+      logo:{color:'#00a6d6', initials:'IF', img:'data/icons/uif.jpeg', url:'https://universityinnovationfellows.org/'},
       roles:[
         {title:'Coordinating Team', period:'Sep 2020 – Aug 2022', desc:'Served as External Affairs Coordinator on the three-person team leading the initiative, overseeing its relations with the wider Twente region.'},
         {title:'UI Guide', period:'Jun 2020 – Feb 2022', desc:'Mentored new University Innovation Fellows cohorts through their Stanford-based Design Thinking training, guiding the 2020 Hamburg University of Technology and 2021 Erasmus University Rotterdam groups.'},
@@ -1278,13 +1281,13 @@
         {title:'UT puts more emphasis on University Innovation Fellows', source:'U-Today', img:'data/pages/volunteering/uif/features/uif3.jpg', href:'https://www.utoday.nl/news/67794/ut-puts-more-emphasis-on-university-innovation-fellows'}
       ] },
     'dih-hero':{ eyebrow:'Volunteering', name:'DIH-HERO', role:'Grants and Contracts Support Officer', type:'Science and Technology', period:'Feb 2021 – Aug 2021 · 7 mos', location:'Enschede, Overijssel, Netherlands',
-      logo:{color:'#c0392b', initials:'DH', img:'data/icons/dih_hero.jpeg'},
+      logo:{color:'#c0392b', initials:'DH', img:'data/icons/dih_hero.jpeg', url:'https://dih-hero.eu/'},
       body:[`I supported the University of Twente's coordination of DIH-HERO, a €16M Horizon 2020 Innovation Action building a pan-European network of Digital Innovation Hubs in healthcare robotics across a 17-partner consortium. I contributed to the project's communications, events, and operations as it connected SMEs, healthcare providers, and research institutes and distributed over €8M in innovation funding.`] },
     'autumn-challenge':{ eyebrow:'Volunteering', name:'Autumn Challenge', role:'Coach', type:'Education', period:'Aug 2020 – Jan 2021 · 6 mos',
-      logo:{color:'#d4791f', initials:'AC', img:'data/icons/autumn_challenge.jpeg'},
+      logo:{color:'#d4791f', initials:'AC', img:'data/icons/autumn_challenge.jpeg', url:'https://www.eciu.eu/news/kick-off-meeting-of-the-autumn-challenge-at-university-of-twente'},
       body:['I advised an interdisciplinary team of students from the Netherlands, Italy, and Sweden as they developed an innovative concept report for a Care Hotel.'] },
     bramzijgers:{ eyebrow:'Volunteering', name:'Stichting Huizer Botters', role:'Secretary, De Bramzijgers', type:'Arts and Culture', period:'Jan 2017 – Aug 2018 · 1 yr 8 mos', location:'Huizen, Noord Holland, Netherlands',
-      logo:{color:'#2c5f8a', initials:'BR', img:'data/icons/bramzijgers.jpeg'},
+      logo:{color:'#2c5f8a', initials:'BR', img:'data/icons/bramzijgers.jpeg', url:'https://huizerbotters.nl/bramzijgers/'},
       body:[`Co-established the youth wing of the Stichting Huizer Botters, "Bramzijgers", to facilitate the transfer of traditional botter craftsmanship. Helped engage a new generation of young members in preserving Huizen's maritime heritage.`],
       gallery:[
         {type:'image', src:'data/pages/volunteering/bramzijgers/bramzijgers1.jpg', alt:'Bramzijgers, preserving Huizen maritime heritage', href:'https://www.instagram.com/huizerbramzijgers/p/Bb7smwcAE6_/'},
@@ -1323,8 +1326,13 @@
     const img = logo.img
       ? `<img src="${esc(logo.img)}" alt="" onerror="this.remove()">`   // falls back to the initials underneath if missing
       : '';
-    const cls = 'page-logo' + (logo.fill ? ' logo--fill' : '');
-    return `<span class="${cls}" style="background:${esc(logo.color || '#888')}">${ini}${img}</span>`;
+    const cls = 'page-logo' + (logo.fill ? ' logo--fill' : '') + (logo.url ? ' page-logo--link' : '');
+    const style = `background:${esc(logo.color || '#888')}`;
+    const inner = `${ini}${img}`;
+    // when the org has a website, the logo becomes an external link
+    return logo.url
+      ? `<a class="${cls}" style="${style}" href="${esc(logo.url)}" target="_blank" rel="noopener" aria-label="Visit website">${inner}</a>`
+      : `<span class="${cls}" style="${style}">${inner}</span>`;
   }
 
   // a second organisation rendered as a card beside the main entry (e.g. Eurographics next to CVPR)
