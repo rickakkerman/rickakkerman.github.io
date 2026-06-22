@@ -1,7 +1,7 @@
 {
   "name": "Rick Akkerman",
   "short_name": "Rick Akkerman",
-  "description": "Research Engineer at the Max Planck Institute for Intelligent Systems.",
+  "description": "Research Associate at the Max Planck Institute for Intelligent Systems.",
   "icons": [
     { "src": "data/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "data/icon-512.png", "sizes": "512x512", "type": "image/png" }

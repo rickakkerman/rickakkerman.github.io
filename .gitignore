@@ -3,5 +3,14 @@
 CLAUDE.md
 
 Screenshot*.png
+# Phone camera dumps / scanned personal docs — never commit these
 IMG_*.PNG
 IMG_*.png
+IMG_*.jpg
+IMG_*.jpeg
+IMG_*.JPG
+IMG_*.JPEG
+IMG_*.HEIC
+IMG_*.heic
+*.HEIC
+*.heic
