@@ -275,7 +275,10 @@
   .hero-portrait img{display:block;width:270px;height:auto}
   @media (max-width:720px){ .hero{flex-direction:column;gap:20px} .hero-portrait{margin:0 auto;order:-2} .hero-portrait img{width:230px} .hero-role{display:block;order:-1;align-self:stretch;margin:0;text-align:center;font-size:15px;font-weight:600;color:var(--ink);line-height:1.4} .hero-role-title{color:var(--ink-soft);font-weight:400} .hero p{text-align:left} .hero-head{flex-direction:column-reverse;align-self:stretch;align-items:center;gap:14px} .hero-head h1{align-self:flex-start} .hero-cta{justify-content:center} .hero-cta .social-btn span{display:none} .hero-cta .social-btn{padding:10px;gap:0} }
   @media (max-width:720px){
-    .hero-cta .hero-menu-btn{display:inline-flex;background:var(--accent);border-color:var(--accent);color:#fff;padding:10px 16px;gap:8px}
+    /* keep all buttons on one line: tighter gaps + padding once the labelled Experience button is added */
+    .hero-cta{gap:6px}
+    .hero-cta .social-btn{padding:8px}
+    .hero-cta .hero-menu-btn{display:inline-flex;background:var(--accent);border-color:var(--accent);color:#fff;padding:8px 12px;gap:7px}
     .hero-cta .hero-menu-btn span{display:inline}
     .hero-cta .hero-menu-btn:hover,.hero-cta .hero-menu-btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
   }
