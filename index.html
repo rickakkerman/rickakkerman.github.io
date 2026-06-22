@@ -8,6 +8,7 @@
 <meta name="author" content="Rick Akkerman">
 <meta name="theme-color" content="#1565c0">
 <link rel="canonical" href="https://rickakkerman.github.io/">
+<link rel="preload" as="image" href="data/pages/biography/AkkermanRick.png" fetchpriority="high">
 
 <!-- favicons / touch icons -->
 <link rel="icon" href="data/AkkermanRick_Logo.ico" sizes="any">
@@ -170,7 +171,6 @@
   .rail-head--toggle{cursor:pointer;user-select:none;border-radius:11px;transition:background .12s}
   .rail-head--toggle:hover{background:var(--hover)}
   .rail-head--toggle .chev{transform:rotate(90deg);transition:transform .2s ease}
-  #expSection.collapsed .rail-head--toggle .chev,
   .rail-section.collapsed .rail-head--toggle .chev{transform:rotate(0deg)}
   .rail-section.collapsed > .company,
   .rail-section.collapsed > .nav-item{display:none}
@@ -490,7 +490,7 @@
   .pub-extra-p{font-size:14.5px;line-height:1.7;color:var(--ink);margin:0 0 14px}
   .pub-thumb{flex:0 0 200px;width:200px;border-radius:10px;overflow:hidden;
     border:1px solid var(--line);background:#fff;align-self:center}
-  .pub-thumb img{display:block;width:100%;height:auto}
+  .pub-thumb img,.pub-thumb video{display:block;width:100%;height:auto}
   @media(max-width:720px){
     .pub{flex-direction:column;gap:14px}
     .pub-thumb{order:-1;width:100%;flex-basis:auto;max-width:320px}
@@ -672,12 +672,11 @@
     </div>
 
     <!-- ===== EXPERIENCE ===== -->
-    <div class="rail-section mini-hide" id="expSection">
-      <div class="rail-head rail-head--toggle" id="expToggle"><span>Experience</span>
+    <div class="rail-section mini-hide">
+      <div class="rail-head rail-head--toggle"><span>Experience</span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </div>
 
-      <!-- EDIT YOUR COMPANIES HERE ↓↓↓  (logo color, initials, name, role) -->
       <a class="company company--current" href="#mpi" data-view="mpi">
         <span class="logo" style="background:#0a6b54">MPI<img src="data/icons/mpi.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">Max Planck Institute</span><span class="role">Research Engineer</span><span class="dates">Feb 2024 – Present</span></span>
@@ -702,7 +701,6 @@
         <span class="logo logo--fill" style="background:#0050aa">LDL<img src="data/icons/lidl.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">LIDL Netherlands</span><span class="role">Customer Service</span><span class="dates">Jul 2018 – Mar 2019</span></span>
       </a>
-      <!-- EDIT YOUR COMPANIES HERE ↑↑↑ -->
 
     </div>
 
@@ -712,7 +710,6 @@
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </div>
 
-      <!-- EDIT YOUR SCHOOLS HERE ↓↓↓  (logo color, initials, name, programme) -->
       <a class="company" href="#uva-msc" data-view="uva-msc">
         <span class="logo logo--fill" style="background:#000">UvA<img src="data/icons/uva.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">University of Amsterdam</span><span class="role">MSc Artificial Intelligence</span><span class="dates">Sep 2021 – Aug 2024</span></span>
@@ -725,7 +722,6 @@
         <span class="logo" style="background:#4a7c59">HM<img src="data/icons/huizermaat.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">Huizermaat</span><span class="role">VWO</span><span class="dates">Sep 2012 – Jun 2018</span></span>
       </a>
-      <!-- EDIT YOUR SCHOOLS HERE ↑↑↑ -->
 
     </div>
 
@@ -735,7 +731,6 @@
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
       </div>
 
-      <!-- EDIT YOUR VOLUNTEERING HERE ↓↓↓  (logo color, initials, name, role) -->
       <a class="company" href="#if-fellows" data-view="if-fellows">
         <span class="logo" style="background:#00a6d6">IF<img src="data/icons/uif.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">University Innovation Fellows</span><span class="role">Fellow</span><span class="dates">Oct 2019 – Mar 2024</span></span>
@@ -752,7 +747,6 @@
         <span class="logo" style="background:#2c5f8a">BR<img src="data/icons/bramzijgers.jpeg" alt="" onerror="this.remove()"></span>
         <span class="meta"><span class="name">Bramzijgers</span><span class="role">Secretary, De Bramzijgers</span><span class="dates">Jan 2017 – Aug 2018</span></span>
       </a>
-      <!-- EDIT YOUR VOLUNTEERING HERE ↑↑↑ -->
 
     </div>
 
@@ -794,7 +788,7 @@
          <p>Research Engineer at the Max Planck Institute for Intelligent Systems in Tübingen, working on 3D digital humans in the team of Michael J. Black. My research centers on parametric body models (SMPL-X, MANO, and FLAME) and their use in human-object interaction, video diffusion models, and face reconstruction. Day-to-day, I work with PyTorch, building data and rendering pipelines, then fine-tuning and evaluating models. At Max Planck I first-authored InterDyn (CVPR 2025), on video diffusion models for interactive object dynamics, and co-authored a second CVPR 2025 paper on face reconstruction from heavily occluded images.</p>
          <p>Before joining Max Planck, I completed my MSc in Artificial Intelligence at the University of Amsterdam and a BSc in Technology, Liberal Arts &amp; Sciences at the University of Twente. Along the way, I worked on legal tech at Loyens &amp; Loeff, interned at Perron038, where I built a thermal-imaging system to detect leaks inside sealed detergent-pod boxes, and at Tembo Group, where I mapped the quality trade-offs of federated learning.</p>
        </div>
-       <div class="hero-portrait"><img src="data/pages/biography/AkkermanRick.png" alt="Rick Akkerman" loading="lazy"></div>
+       <div class="hero-portrait"><img src="data/pages/biography/AkkermanRick.png" alt="Rick Akkerman" width="344" height="344" fetchpriority="high" decoding="async"></div>
      </section>
 
      <h2 class="section-title" id="pubs" style="margin-top:40px">Publications</h2>
@@ -803,7 +797,7 @@
      <h2 class="section-title" id="projects" style="margin-top:40px">Projects</h2>
      <div class="proj-list">
        <a class="proj-card" href="#project-perron038" data-view="project-perron038">
-         <span class="proj-card-thumb"><img src="data/pages/experience/perron038/box1.png" alt="" loading="lazy" onerror="this.closest('.proj-card-thumb').remove()"></span>
+         <span class="proj-card-thumb"><img src="data/pages/experience/perron038/box1.jpg" alt="" loading="lazy" onerror="this.closest('.proj-card-thumb').remove()"></span>
          <span class="proj-card-body">
            <span class="proj-card-title">Building a dataset for detecting leaking detergent pods with thermal imaging</span>
            <span class="proj-card-sub">A non-destructive inspection method using active thermography, from my internship at Perron038.</span>
@@ -871,8 +865,7 @@
   fitRail();
 
   /* =====================================================================
-     PAGE CONTENT  ·  EDIT YOUR PAGES HERE ↓↓↓
-     One entry per sidebar item. Fields:
+     Page content. One entry per sidebar item. Fields:
        eyebrow  – small label above the title (section name)
        name     – page title
        role     – subtitle (job title / programme)
@@ -897,7 +890,7 @@
           venue:'CVPR 2025',
           summary:'InterDyn is a video diffusion framework for controllable interactive dynamics: conditioned on a single image and the motion of a driving object, it synthesizes a video of the resulting motion and interactions throughout the rest of the scene, showing that video diffusion models possess an implicit understanding of physics, such as collisions and forces, without an explicit simulator.',
           cited:28,
-          thumb:'data/publications/interdyn/interdyn_thumbnail.gif',
+          video:'data/publications/interdyn/interdyn_thumbnail',
           links:[{label:'PDF', href:'data/publications/interdyn/interdyn_paper.pdf'}, {label:'Supplementary', href:'data/publications/interdyn/interdyn_suppmat.pdf'}, {label:'arXiv', href:'https://arxiv.org/abs/2412.11785'}, {label:'Project', href:'https://interdyn.is.tue.mpg.de/'}, {label:'Code', href:'https://github.com/rickakkerman/InterDyn'}, {label:'Poster', href:'data/publications/interdyn/interdyn_poster.pdf', download:true}]
         },
         {
@@ -906,7 +899,7 @@
           venue:'CVPR 2025',
           summary:'OFER is a diffusion-based method for 3D face reconstruction from heavily occluded images: instead of a single guess, it generates and ranks multiple plausible hypotheses for the face shape and expression, capturing the ambiguity of what lies behind the occlusion.',
           cited:5,
-          thumb:'data/publications/ofer/ofer_thumbnail.gif',
+          video:'data/publications/ofer/ofer_thumbnail',
           links:[{label:'PDF', href:'data/publications/ofer/ofer_paper.pdf'}, {label:'Supplementary', href:'data/publications/ofer/ofer_suppmat.pdf'}, {label:'arXiv', href:'https://arxiv.org/abs/2410.21629'}, {label:'Project', href:'https://ofer.is.tue.mpg.de/'}, {label:'Code', href:'https://github.com/prathebaselva/OFER'}]
         },
         {
@@ -915,7 +908,7 @@
           venue:'MLRC 2021',
           summary:'Our reproducibility study of StylEx. We train a StyleGAN whose StyleSpace coordinates map to the visual attributes that drive a classifier’s predictions, so its decisions can be explained and edited counterfactually. We re-implemented the method and tested how well its explanations and central claims held up. This work was presented as a poster at NeurIPS by Noah van der Vleuten.',
           cited:1,
-          thumb:'data/publications/explaining/explaining_thumbnail.gif',
+          video:'data/publications/explaining/explaining_thumbnail',
           links:[{label:'PDF', href:'data/publications/explaining/explaining_paper.pdf'}, {label:'ReScience', href:'https://rescience.github.io/bibliography/Vleuten_2022.html'}, {label:'Code', href:'https://github.com/NoahVl/Explaining-In-Style-Reproducibility-Study'}, {label:'Slides', href:'data/publications/explaining/explaining_slides.pdf'}, {label:'Poster', href:'data/publications/explaining/explaining_poster.pdf', download:true}]
         }
       ]
@@ -1168,7 +1161,7 @@
         'Tuned the heating process, comparing different heaters and sweeping heating time and camera distance to characterise how they raise leakage contrast while lowering container homogeneity, then fixing the setup that best separated the two classes.',
         'Collected and labelled a thermal image dataset of roughly 1,000 samples. Despite the automated capture, it was labour-intensive: every box was manually prepared with a graded amount of leakage (low, moderate, or heavy), shaken to vary pod positions, and cleaned for reuse between rounds.'
       ],
-      project:{ view:'project-perron038', thumb:'data/pages/experience/perron038/box1.png',
+      project:{ view:'project-perron038', thumb:'data/pages/experience/perron038/box1.jpg',
         title:'Building a dataset for detecting leaking detergent pods with thermal imaging',
         sub:'A non-destructive inspection method using active thermography, from my internship at Perron038.' }
     },
@@ -1177,7 +1170,7 @@
       back:{label:'Projects', scroll:'projects'},
       writeup:{
         sections:[
-          {head:'Problem', img:'data/pages/experience/perron038/boxes.png', figW:630, imgAfter:0, imgNum:1, imgCap:'Two containers seen from the top, one holding pods and one without, showing what leakage looks like.', imgAlt:'Two detergent-pod containers viewed from above, one with pods and one without', body:[
+          {head:'Problem', img:'data/pages/experience/perron038/boxes.jpg', figW:630, imgAfter:0, imgNum:1, imgCap:'Two containers seen from the top, one holding pods and one without, showing what leakage looks like.', imgAlt:'Two detergent-pod containers viewed from above, one with pods and one without', body:[
             'Manufacturers of detergent pods want to guarantee that no box leaves the factory with a broken pod inside. The catch is that recent EU regulations require these containers to be opaque (so they look less appealing to children), which makes visual inspection after packaging impossible. Manually opening every box to check it does not scale on a production line, so the goal was to create a prototype to automate the inspection with a non-destructive method that could effectively look through the plastic.'
           ]},
           {head:'Active thermography', figsAfter:1, figs:[
@@ -1201,9 +1194,9 @@
             'Supervised learning needs lots of labelled examples, but we only had a limited supply of containers. We stretched them as far as they would go: containers were split evenly between leaking and non-leaking, leakage was created in three graded amounts (low, moderate, heavy, with real leaks ranging roughly from 5 to 25 ml), and every box was imaged multiple times after shaking it to vary the pod positions inside. Between rounds, the bottoms were cleaned thoroughly so the same boxes could be reused for new leakage configurations. Each image was labelled with its full capture settings and box number. I explored preprocessing techniques to make leakage easier to detect, most notably mean image subtraction: computing the average image over the dataset and subtracting it from each frame, so that regions deviating from the norm, the leakage, stand out.'
           ]},
           {head:'Outcome', figsAfter:0, figs:[
-            {img:'data/pages/experience/perron038/leakage-1.png', num:9, alt:'Thermal image of a container with no leakage', title:'Thermal image of a container with no leakage.'},
-            {img:'data/pages/experience/perron038/leakage-2.png', num:10, alt:'Thermal image of a container with mild leakage', title:'Thermal image of a container with mild leakage.'},
-            {img:'data/pages/experience/perron038/leakage-3.png', num:11, alt:'Thermal image of a container with heavy leakage', title:'Thermal image of a container with heavy leakage.'}
+            {img:'data/pages/experience/perron038/leakage-1.jpg', num:9, alt:'Thermal image of a container with no leakage', title:'Thermal image of a container with no leakage.'},
+            {img:'data/pages/experience/perron038/leakage-2.jpg', num:10, alt:'Thermal image of a container with mild leakage', title:'Thermal image of a container with mild leakage.'},
+            {img:'data/pages/experience/perron038/leakage-3.jpg', num:11, alt:'Thermal image of a container with heavy leakage', title:'Thermal image of a container with heavy leakage.'}
           ], body:[
             {html:'The resulting dataset of ~1,000 balanced thermal images became the foundation of Akash Ravi Prame\'s <a class="inline-link" href="https://purl.utwente.nl/essays/88563" target="_blank" rel="noopener">MSc thesis on hybrid learning for leakage detection<span class="inline-arr">↗</span></a>, which compared handcrafted features, CNNs, and hybrid fusion models. The best hybrid model reached an accuracy of 95.6%, a strong proof of concept that a heater, an infrared camera, and a well-built dataset can detect leakages inside a sealed, opaque container.'}
           ]}
@@ -1295,27 +1288,7 @@
       ],
       galleryCredit:'Photos & video: Coen Koetsier' },
 
-    /* ----- RICK ----- */
-    cv:{
-      eyebrow:'Rick', name:'CV / Résumé',
-      logo:{color:'#1565c0', initials:'CV'},
-      body:['Download my full CV, or browse the Experience and Education sections in the sidebar.'],
-      links:[{label:'Download CV (PDF)', href:'#', download:true}],
-      note:'[CV file not linked yet, add the PDF to the project and update the link above.]'
-    },
-    contact:{
-      eyebrow:'Rick', name:'Contact',
-      logo:{color:'#1565c0', initials:'@'},
-      body:['The best way to reach me is by email. I am also on LinkedIn, GitHub, and Google Scholar.'],
-      links:[
-        {label:'Email me', href:'mailto:itsrickakkerman@gmail.com'},
-        {label:'LinkedIn', href:'#'},
-        {label:'GitHub', href:'#'},
-        {label:'Scholar', href:'#'}
-      ]
-    }
   };
-  // EDIT YOUR PAGES HERE ↑↑↑
 
   /* ---------- rendering ---------- */
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1363,7 +1336,9 @@
       const title = pub.url
         ? `<a href="${esc(pub.url)}" target="_blank" rel="noopener">${esc(pub.title || '')}</a>`
         : esc(pub.title || '');
-      const thumb = pub.thumb
+      const thumb = pub.video
+        ? `<div class="pub-thumb"><video class="pub-video" loop muted playsinline preload="none" poster="${esc(pub.video)}.jpg" aria-hidden="true"><source src="${esc(pub.video)}.webm" type="video/webm"><source src="${esc(pub.video)}.mp4" type="video/mp4"></video></div>`
+        : pub.thumb
         ? `<div class="pub-thumb"><img src="${esc(pub.thumb)}" alt="" loading="lazy" onerror="this.closest('.pub-thumb').remove()"></div>`
         : '';
       return `<div class="pub">
@@ -1408,10 +1383,33 @@
      publications source of truth (same rich rendering as the standalone
      Publications view), so it never drifts out of sync. */
   const featuredPubs = PAGES.publications.pubs;
+
+  /* Publication thumbnails are muted looping videos with preload="none": nothing
+     downloads until the clip scrolls into view, then it loads and plays; it pauses
+     again once offscreen. Keeps these off the initial-load critical path. */
+  const pubVideoObserver = ('IntersectionObserver' in window)
+    ? new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          const v = en.target;
+          if(en.isIntersecting){ if(v.preload === 'none') v.preload = 'auto'; v.play && v.play().catch(()=>{}); }
+          else { v.pause && v.pause(); }
+        });
+      }, {rootMargin:'200px'})
+    : null;
+  function hydratePubVideos(root){
+    (root || document).querySelectorAll('video.pub-video').forEach(v => {
+      if(v.dataset.hydrated) return;
+      v.dataset.hydrated = '1';
+      if(pubVideoObserver) pubVideoObserver.observe(v);
+      else { v.preload = 'auto'; v.autoplay = true; v.play && v.play().catch(()=>{}); }
+    });
+  }
+
   function renderFeatured(){
     const host = document.getElementById('homeFeatured');
     if(!host) return;
     host.innerHTML = pubsHTML(featuredPubs);
+    hydratePubVideos(host);
   }
 
   renderFeatured();
@@ -1558,6 +1556,7 @@
       document.documentElement.classList.remove('home');
       homeView.hidden = true;
       pageView.innerHTML = renderPage(data);   // media elements created only now
+      hydratePubVideos(pageView);
       pageView.hidden = false;
       // section label moves up to the top bar; sub-pages (articles, projects) also park their back link here so it stays fixed while scrolling
       // Back returns to the view we actually came from (e.g. the experience entry),
