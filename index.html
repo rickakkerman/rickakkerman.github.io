@@ -269,9 +269,16 @@
     transition:border-color .15s ease,color .15s ease,background .15s ease}
   .social-btn:hover{border-color:#c9d8ec;color:var(--accent);background:var(--hover)}
   .social-btn svg{width:17px;height:17px;flex:none}
+  /* "Experience" drawer-opener: hidden on desktop (rail is always visible), shown blue on mobile */
+  .hero-menu-btn{display:none;cursor:pointer;font-family:inherit;background:none}
   .hero-portrait{position:relative;z-index:1;flex:0 0 auto}
   .hero-portrait img{display:block;width:270px;height:auto}
   @media (max-width:720px){ .hero{flex-direction:column;gap:20px} .hero-portrait{margin:0 auto;order:-2} .hero-portrait img{width:230px} .hero-role{display:block;order:-1;align-self:stretch;margin:0;text-align:center;font-size:15px;font-weight:600;color:var(--ink);line-height:1.4} .hero-role-title{color:var(--ink-soft);font-weight:400} .hero p{text-align:left} .hero-head{flex-direction:column-reverse;align-self:stretch;align-items:center;gap:14px} .hero-head h1{align-self:flex-start} .hero-cta{justify-content:center} .hero-cta .social-btn span{display:none} .hero-cta .social-btn{padding:10px;gap:0} }
+  @media (max-width:720px){
+    .hero-cta .hero-menu-btn{display:inline-flex;background:var(--accent);border-color:var(--accent);color:#fff;padding:10px 16px;gap:8px}
+    .hero-cta .hero-menu-btn span{display:inline}
+    .hero-cta .hero-menu-btn:hover,.hero-cta .hero-menu-btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
+  }
   .btn{padding:11px 22px;border-radius:999px;font-weight:600;font-size:14px;transition:.15s}
   .btn-primary{background:var(--accent);color:#fff}
   .btn-primary:hover{background:#bf451f}
@@ -770,6 +777,10 @@
        <div class="hero-head">
          <h1>Biography</h1>
          <div class="hero-cta">
+           <button type="button" class="social-btn hero-menu-btn" id="heroMenuBtn" aria-label="Open the menu to view experience, education and more" aria-controls="rail">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+             <span>Experience</span>
+           </button>
            <a class="social-btn" href="data/pages/biography/Resume_AkkermanRick.pdf" download="Resume_AkkermanRick.pdf" aria-label="Download CV">
              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h7l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm6.5 1.5V8H17l-4.5-4.5zM8 12.5h8V14H8v-1.5zm0 3h8V17H8v-1.5z"/></svg>
              <span>CV</span>
@@ -793,7 +804,7 @@
          </div>
        </div>
        <div class="hero-text">
-         <p>Research Associate at the Max Planck Institute for Intelligent Systems in Tübingen, working on 3D digital humans in the team of Michael J. Black. My research centers on parametric body models (SMPL-X, MANO, and FLAME) and their use in human-object interaction, video diffusion models, and face reconstruction. Day-to-day, I work with PyTorch, building data and rendering pipelines, then fine-tuning and evaluating models. At Max Planck I first-authored InterDyn (CVPR 2025), on video diffusion models for interactive object dynamics, and co-authored a second CVPR 2025 paper on face reconstruction from heavily occluded images.</p>
+         <p>I am a Research Associate at the Max Planck Institute for Intelligent Systems in Tübingen, working at the frontier of generative AI in Michael J. Black's group. My work is multimodal by nature, spanning video diffusion models and vision-language models applied to digital humans. I first-authored InterDyn (CVPR 2025), which showed that video diffusion models can generate physically plausible interactions from a single image and a driving motion without an explicit simulator, and co-authored a second CVPR 2025 paper on reconstructing 3D faces from heavily occluded images. Underneath the research I am hands-on in PyTorch, training models on multi-GPU A100/H100 clusters and building the evaluation tooling to measure them.</p>
          <p>Before joining Max Planck, I completed my MSc in Artificial Intelligence at the University of Amsterdam and a BSc in Technology, Liberal Arts &amp; Sciences at the University of Twente. Along the way, I worked on legal tech at Loyens &amp; Loeff, interned at Perron038, where I built a thermal-imaging system to detect leaks inside sealed detergent-pod boxes, and at Tembo Group, where I mapped the quality trade-offs of federated learning.</p>
        </div>
        <div class="hero-portrait"><img src="data/pages/biography/AkkermanRick.jpg" alt="Rick Akkerman" width="344" height="344" fetchpriority="high" decoding="async"></div>
@@ -836,6 +847,14 @@
     menuBtn.addEventListener('click', () => {
       const open = body.classList.toggle('drawer');
       menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  // the blue "Experience" button in the hero opens the same drawer as the hamburger
+  const heroMenuBtn = document.getElementById('heroMenuBtn');
+  if(heroMenuBtn){
+    heroMenuBtn.addEventListener('click', () => {
+      body.classList.add('drawer');
+      if(menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
     });
   }
   if(railBackdrop){
